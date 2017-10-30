@@ -10,6 +10,17 @@
 
 <body>
     <div id="game">
+        <div id="statusBar" class="status-bar">
+            <div class="status-bar__item">
+                Princess : {{ bees.princess.length }}
+            </div>
+            <div class="status-bar__item">
+                Drones : {{ bees.drone.length }}
+            </div>
+            <div class="status-bar__item">
+                Hives : {{ hives }}
+            </div>
+        </div>
         <div id="farm">
             <div v-for="(hive, index) in hives" class="hive" :index="index" :key="hive.id" :data-state="currentState[index]">
                 <progress :value="hive.currentProgress" max="100" class="start"></progress>
@@ -53,7 +64,7 @@
         const game = new Game();
         game.addHive();
 
-        var farm = new Vue({
+        let farm = new Vue({
             el: "#farm",
             data: {
                 'hives': game.hives
@@ -85,6 +96,14 @@
                 }
             }
         });
+
+        let statusBar = new Vue({
+            el: "#statusBar",
+            data: {
+                'bees': game.bees,
+                'hives': game.hives.length
+            }
+        })
     </script>
 </body>
 
