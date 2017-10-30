@@ -4,6 +4,20 @@
         box-sizing: border-box;
     }
     
+    body {
+        font-family: sans-serif;
+    }
+    
+    .status-bar {
+        padding: 10px;
+    }
+    
+    .status-bar__item {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 30px;
+    }
+    
     .farm {
         display: flex;
         flex-wrap: wrap;
