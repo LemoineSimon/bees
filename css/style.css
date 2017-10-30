@@ -148,6 +148,16 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        cursor: pointer;
+    }
+    
+    .hive__production .slot .bee {
+        cursor: pointer;
+        transition: filter .05s ease-in-out;
+    }
+    
+    .hive__production .slot .bee:hover {
+        filter: drop-shadow(0 0 2px white);
     }
     
     @keyframes playBee {
