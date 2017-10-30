@@ -1,0 +1,92 @@
+<html lang="en">
+
+<head>
+    <title>Bees</title>
+    <meta name="charset" content="utf-8">
+    <meta name="description" content="A game inspired by Minecraft Forestry mod">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+    <div id="game">
+        <div id="farm">
+            <div v-for="(hive, index) in hives" class="hive" :index="index" :key="hive.id" :data-state="currentState[index]">
+                <progress :value="hive.currentProgress" max="100" class="start"></progress>
+                <h3 class="hive__name">#{{ hive.id }}</h3>
+                <div class="hive__slot">
+                    <div class="hive__starter">
+                        <div class="slot">
+                            <div v-if="hive.bees.queen.length > 0" :data-beerole="hive.bees.queen[0].role" class="bee"></div>
+                            <div v-else-if="hive.bees.princess.length > 0" :data-beerole="hive.bees.princess[0].role" class="bee"></div>
+                        </div>
+                        <div class="slot">
+                            <div v-if="hive.bees.drone.length > 0" :data-beerole="hive.bees.drone[0].role" class="bee"></div>
+                        </div>
+                    </div>
+                    <div class="hive__production">
+                        <div class="slot">
+                            <div v-if="hive.nursery.princess.length > 0" class="bee" v-bind:class="[hive.nursery.princess[0].type]" :data-beerole="hive.nursery.princess[0].role" @click="collectPrincess(index)"></div>
+                        </div>
+                        <div v-for="(drone,droneIndex) in hive.nursery.drone" class="slot">
+                            <div v-if="drone" class="bee" v-bind:class="drone.type" :data-beerole="drone.role" @click="collectDrone(index,droneIndex)">{{ index }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <button class="hive__button" type="button" @click="addPrincess(index)">Add Princess</button>
+                        <button class="hive__button" type="button" @click="addDrone(index)">Add Drone</button>
+                    </div>
+                    <div>
+                        <button class="hive__button" type="button" @click="start(index)">Start Hive</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/utils.js "></script>
+    <script src="js/class/Bee.js "></script>
+    <script src="js/class/Hive.js "></script>
+    <script src="js/class/Game.js "></script>
+    <script>
+        const game = new Game();
+        game.addHive();
+
+        var farm = new Vue({
+            el: "#farm",
+            data: {
+                'hives': game.hives
+            },
+            methods: {
+
+                addPrincess: function(index) {
+                    this.hives[index].addBee("princess");
+                },
+                addDrone: function(index) {
+                    this.hives[index].addBee("drone");
+                },
+                start: function(index) {
+                    console.log('start method');
+                    this.hives[index].start();
+                },
+
+                collectPrincess: function(hiveIndex) {
+                    game.collectPrincess(hiveIndex);
+                },
+                collectDrone: function(hiveIndex, droneIndex) {
+                    game.collectDrone(hiveIndex, droneIndex);
+                }
+            },
+            computed: {
+                currentState: function() {
+                    return this.hives.map(function(hive) {
+                        return hive.states[hive.currentState].type;
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    .farm {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .hive {
+        display: inline-block;
+        background-color: #eaeaea;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 7px;
+        box-shadow: 0 0 4px 1px rgba(0, 0, 0, .3);
+        text-align: center;
+    }
+    
+    .hive__name {
+        margin: 0 15px 10px;
+    }
+    
+    .hive__slot {
+        display: flex;
+        align-items: center;
+    }
+    
+    .hive__starter {
+        position: relative;
+        width: 100px;
+        height: 170px;
+        margin: 0 auto;
+        position: relative;
+        background-color: #fff0d7;
+        border-radius: 7px;
+        border: 1px solid #c1c1c1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+    
+    .hive__production {
+        width: 170px;
+        height: 170px;
+        margin: 0 auto;
+        position: relative;
+        background-color: #fff0d7;
+        border-radius: 7px;
+        border: 1px solid #c1c1c1;
+        text-align: left;
+    }
+    
+    .hive__button {
+        background-color: #fff;
+        border: 1px solid #aaa;
+        border-radius: 7px;
+        text-align: center;
+        margin-top: 10px;
+        padding: 10px 15px;
+    }
+    
+    .slot {
+        width: 50px;
+        height: 28.87px;
+        color: #949494;
+        background-color: currentColor;
+        margin: -14px 0 0 -25px;
+    }
+    
+    .slot:before,
+    .slot:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        border-left: 25px solid transparent;
+        border-right: 25px solid transparent;
+    }
+    
+    .slot:before {
+        bottom: 100%;
+        border-bottom: 14.43px solid currentColor;
+    }
+    
+    .slot:after {
+        top: 100%;
+        width: 0;
+        border-top: 14.43px solid currentColor;
+    }
+    
+    .hive__starter .slot {
+        position: relative;
+        margin: 0 auto;
+    }
+    
+    .hive__production .slot {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -14px 0 0 -25px;
+    }
+    
+    .hive__production .slot:nth-child(2) {
+        transform: translate(-52%, -45px);
+    }
+    
+    .hive__production .slot:nth-child(3) {
+        transform: translate(52%, -45px);
+    }
+    
+    .hive__production .slot:nth-child(4) {
+        transform: translate(-105%, 0%);
+    }
+    
+    .hive__production .slot:nth-child(5) {
+        transform: translate(105%, 0%);
+    }
+    
+    .hive__production .slot:nth-child(6) {
+        transform: translate(-52%, 45px);
+    }
+    
+    .hive__production .slot:nth-child(7) {
+        transform: translate(52%, 45px);
+    }
+    
+    .slot .bee {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    @keyframes playBee {
+        10% {
+            background-position-y: -200px;
+        }
+        11% {
+            background-position-y: 0px;
+        }
+    }
+    
+    .slot .bee[data-beerole="princess"] {
+        background-image: url('../img/src/body1.png'), url('../img/src/princess.body2.png'), url('../img/src/princess.outline.png');
+        animation: playBee 5s 2s steps(5) infinite;
+    }
+    
+    .slot .bee[data-beerole="queen"] {
+        background-image: url('../img/src/body1.png'), url('../img/src/queen.body2.png'), url('../img/src/queen.outline.png');
+        animation: playBee 5s 2s steps(5) infinite;
+    }
+    
+    .slot .bee[data-beerole="drone"] {
+        background-image: url('../img/src/body1.png'), url('../img/src/drone.body2.png'), url('../img/src/drone.outline.png');
+        animation: playBee 5s 3.5s steps(5) infinite;
+    }
+    
+    .slot .comb {
+        background-image: url('../img/src/bee_combs.1.png'), url('../img/src/bee_combs.0.png'), url('../img/src/bee_comb.png');
+    }
