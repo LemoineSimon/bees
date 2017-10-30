@@ -72,7 +72,6 @@ class Hive {
         this.progress();
     }
     run() {
-        console.log('run...');
         if (this.bees.queen.length == 0) {
             this.bees.drone.shift();
             let queen = this.bees.princess[0];
@@ -148,6 +147,7 @@ class Hive {
         this.nursery.princess.push(new Bee({ role: "princess" }));
     }
     generateDrone() {
+        this.nursery.drone.fill(null);
         for (var i = 0; i < this.bees.queen[0].larveNumber; i++) {
             this.nursery.drone.fill(new Bee({ role: "drone" }), i, i + 1);
         }

@@ -28,8 +28,8 @@
                         <div class="slot">
                             <div v-if="hive.nursery.princess.length > 0" class="bee" v-bind:class="[hive.nursery.princess[0].type]" :data-beerole="hive.nursery.princess[0].role" @click="collectPrincess(index)"></div>
                         </div>
-                        <div v-for="(drone,droneIndex) in hive.nursery.drone" class="slot">
-                            <div v-if="drone" class="bee" v-bind:class="drone.type" :data-beerole="drone.role" @click="collectDrone(index,droneIndex)">{{ index }}</div>
+                        <div v-for="(useless,droneIndex) in 6" class="slot">
+                            <div v-if="hive.nursery.drone[droneIndex]" class="bee" v-bind:class="hive.nursery.drone[droneIndex].type" :data-beerole="hive.nursery.drone[droneIndex].role" @click="collectDrone(index,droneIndex)">{{ droneIndex }}</div>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,6 @@
                     this.hives[index].addBee("drone");
                 },
                 start: function(index) {
-                    console.log('start method');
                     this.hives[index].start();
                 },
 
