@@ -14,7 +14,7 @@
     
     .status-bar__item {
         display: inline-block;
-        vertical-align: middle;
+        vertical-align: top;
         margin-right: 30px;
     }
     

@@ -12,10 +12,11 @@
     <div id="game">
         <div id="statusBar" class="status-bar">
             <div class="status-bar__item">
-                <b>Princess :</b> {{ bees.princess.length }}
+                <b>Money :</b> {{ bees.princess.length }}
             </div>
             <div class="status-bar__item">
-                <b>Drones :</b> {{ bees.drone.length }}
+                <div><b>Princess :</b> {{ bees.princess.length }}</div>
+                <div><b>Drones :</b> {{ bees.drone.length }}</div>
             </div>
             <div class="status-bar__item">
                 <b>Hives :</b> {{ hives }}
@@ -100,6 +101,7 @@
         let statusBar = new Vue({
             el: "#statusBar",
             data: {
+                'money': game.money,
                 'bees': game.bees,
                 'hives': game.hives.length
             }
