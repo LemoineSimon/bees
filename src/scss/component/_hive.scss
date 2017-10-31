@@ -1,0 +1,118 @@
+.hive {
+    display: inline-block;
+    background-color: #eaeaea;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 7px;
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, .3);
+    text-align: center;
+    &__name {
+        margin: 0 15px 10px;
+    }
+    &__slot {
+        display: flex;
+        align-items: center;
+    }
+    &__starter {
+        position: relative;
+        width: 80px;
+        height: 170px;
+        margin: 0 auto;
+        position: relative;
+        background-color: #fff0d7;
+        border-radius: 7px;
+        border: 1px solid #c1c1c1;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        .slot {
+            position: relative;
+            margin: 0 auto;
+        }
+    }
+    &__production {
+        width: 170px;
+        height: 170px;
+        margin: 0 auto;
+        position: relative;
+        background-color: #fff0d7;
+        border-radius: 7px;
+        border: 1px solid #c1c1c1;
+        text-align: left;
+        .slot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -14px 0 0 -25px;
+            &:nth-child(2) {
+                transform: translate(-52%, -45px);
+            }
+            &:nth-child(3) {
+                transform: translate(52%, -45px);
+            }
+            &:nth-child(4) {
+                transform: translate(-105%, 0%);
+            }
+            &:nth-child(5) {
+                transform: translate(105%, 0%);
+            }
+            &:nth-child(6) {
+                transform: translate(-52%, 45px);
+            }
+            &:nth-child(7) {
+                transform: translate(52%, 45px);
+            }
+            .bee {
+                cursor: pointer;
+                transition: filter .05s ease-in-out;
+                &:hover {
+                    filter: drop-shadow(0 0 2px white);
+                }
+            }
+        }
+    }
+    &__button {
+        background-color: #fff;
+        border: 1px solid #aaa;
+        border-radius: 7px;
+        text-align: center;
+        margin-top: 10px;
+        padding: 10px 15px;
+    }
+    .slot {
+        width: 50px;
+        height: 28.87px;
+        color: #949494;
+        background-color: currentColor;
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            width: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+        }
+        &:before {
+            bottom: 100%;
+            border-bottom: 14.43px solid currentColor;
+        }
+        &:after {
+            top: 100%;
+            width: 0;
+            border-top: 14.43px solid currentColor;
+        }
+        .bee {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+        .comb {
+            background-image: url('../img/src/bee_combs.1.png'), url('../img/src/bee_combs.0.png'), url('../img/src/bee_comb.png');
+        }
+    }
+}

@@ -171,3 +171,5 @@ typings/
 package-lock.json
 
 # End of https://www.gitignore.io/api/phpstorm,sublimetext,visualstudiocode,node
+
+dist/css/maps
