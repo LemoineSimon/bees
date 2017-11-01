@@ -2656,6 +2656,9 @@ var Hive = function () {
             if ((this.bees.princess.length >= 0 && this.bees.drone.length == 0 || this.bees.princess.length == 0 && this.bees.drone.length > 0) && this.bees.queen.length == 0) {
                 return;
             }
+            if (this.states[this.currentState].type != "start") {
+                return;
+            }
             this.currentState++;
             this.currentProgress = 0;
             this.currentTime = 0;
@@ -2678,13 +2681,12 @@ var Hive = function () {
     }, {
         key: 'continue',
         value: function _continue() {
-            this.currentState++;
-            this.nextState();
+            this.currentState--;
+            this.progress();
         }
     }, {
         key: 'finish',
         value: function finish() {
-            this.currentState = 0;
             this.currentTime = 0;
             this.currentProgress = 100;
 
@@ -2731,7 +2733,7 @@ var Hive = function () {
         value: function updateQueen() {
             var queen = this.bees.queen[0];
             if (--queen.life == 0) {
-                this.waiting();
+                //this.waiting();
                 // Generation des princess
                 this.generatePrincess();
                 // Generation des drones

@@ -68,6 +68,9 @@ class Hive {
         if (((this.bees.princess.length >= 0 && this.bees.drone.length == 0) || (this.bees.princess.length == 0 && this.bees.drone.length > 0)) && this.bees.queen.length == 0) {
             return;
         }
+        if (this.states[this.currentState].type != "start") {
+            return;
+        }
         this.currentState++;
         this.currentProgress = 0;
         this.currentTime = 0;
@@ -86,11 +89,10 @@ class Hive {
         this.progress();
     }
     continue () {
-        this.currentState++;
-        this.nextState();
+        this.currentState--;
+        this.progress();
     }
     finish() {
-        this.currentState = 0;
         this.currentTime = 0;
         this.currentProgress = 100;
 
@@ -132,7 +134,7 @@ class Hive {
     updateQueen() {
         let queen = this.bees.queen[0];
         if (--queen.life == 0) {
-            this.waiting();
+            //this.waiting();
             // Generation des princess
             this.generatePrincess();
             // Generation des drones
