@@ -2656,7 +2656,7 @@ var Hive = function () {
             if ((this.bees.princess.length >= 0 && this.bees.drone.length == 0 || this.bees.princess.length == 0 && this.bees.drone.length > 0) && this.bees.queen.length == 0) {
                 return;
             }
-            if (this.states[this.currentState].type != "start") {
+            if (this.states[this.currentState].type != "waiting") {
                 return;
             }
             this.currentState++;
