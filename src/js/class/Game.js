@@ -9,9 +9,9 @@ class Game {
             'drone': []
         };
         this.ressources = {
-            honey: 0,
-            wood: 0,
-            comb: 0
+            honey: [],
+            wood: [],
+            comb: []
         };
         this.farm = document.querySelector(".farm");
     }
@@ -29,7 +29,8 @@ class Game {
         this.bees.drone.push(drone);
     }
     collectLoot(hiveIndex, lootIndex) {
-        console.log(this.hives[hiveIndex].loots[lootIndex]);
+        let loot = this.hives[hiveIndex].loots.splice(lootIndex, 1, null)[0];
+        this.ressources[loot.name].push(loot);
     }
 }
 

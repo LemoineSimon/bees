@@ -2459,7 +2459,8 @@ var statusBar = new _vue2.default({
     data: {
         'money': game.money,
         'bees': game.bees,
-        'hives': game.hives.length
+        'hives': game.hives.length,
+        'ressources': game.ressources
     }
 });
 
@@ -2575,9 +2576,9 @@ var Game = function () {
             'drone': []
         };
         this.ressources = {
-            honey: 0,
-            wood: 0,
-            comb: 0
+            honey: [],
+            wood: [],
+            comb: []
         };
         this.farm = document.querySelector(".farm");
     }
@@ -2603,7 +2604,8 @@ var Game = function () {
     }, {
         key: 'collectLoot',
         value: function collectLoot(hiveIndex, lootIndex) {
-            console.log(this.hives[hiveIndex].loots[lootIndex]);
+            var loot = this.hives[hiveIndex].loots.splice(lootIndex, 1, null)[0];
+            this.ressources[loot.name].push(loot);
         }
     }]);
     return Game;

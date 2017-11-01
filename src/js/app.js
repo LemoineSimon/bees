@@ -56,6 +56,7 @@ let statusBar = new Vue({
     data: {
         'money': game.money,
         'bees': game.bees,
-        'hives': game.hives.length
+        'hives': game.hives.length,
+        'ressources': game.ressources
     }
 });
