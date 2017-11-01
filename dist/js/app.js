@@ -2413,7 +2413,6 @@ var farm = new _vue2.default({
         'hives': game.hives
     },
     methods: {
-
         addPrincess: function addPrincess(index) {
             this.hives[index].addBee("princess");
         },
@@ -2423,12 +2422,23 @@ var farm = new _vue2.default({
         start: function start(index) {
             this.hives[index].start();
         },
+        isHiveProductionEmpty: function isHiveProductionEmpty(index) {
+            return this.hives[index].isProductionEmpty();
+        },
+        canResetHiveState: function canResetHiveState(index) {
+            if (!this.isHiveProductionEmpty(index)) {
+                return;
+            }
+            this.hives[index].resetState();
+        },
 
         collectPrincess: function collectPrincess(hiveIndex) {
             game.collectPrincess(hiveIndex);
+            this.canResetHiveState(hiveIndex);
         },
         collectDrone: function collectDrone(hiveIndex, droneIndex) {
             game.collectDrone(hiveIndex, droneIndex);
+            this.canResetHiveState(hiveIndex);
         }
     },
     computed: {
@@ -2697,6 +2707,7 @@ var Hive = function () {
     }, {
         key: 'waiting',
         value: function waiting() {
+            this.currentState = 0;
             this.currentProgress = 0;
             this.currentTime = 0;
         }
@@ -2709,14 +2720,20 @@ var Hive = function () {
             this.bees[role].push(new _Bee2.default({ role: role }));
         }
     }, {
-        key: 'cleanSlot',
-        value: function cleanSlot() {
-            var slots = this.dom.querySelector('.hive__production').querySelectorAll('.slot');
-            [].forEach.call(slots, function (slot) {
-                while (slot.firstChild) {
-                    slot.removeChild(slot.firstChild);
-                }
+        key: 'isProductionEmpty',
+        value: function isProductionEmpty() {
+            var droneEmpty = this.nursery.drone.filter(function (drone) {
+                return drone ? true : false;
             });
+            if (this.nursery.princess.length || droneEmpty.length) {
+                return false;
+            }
+            return true;
+        }
+    }, {
+        key: 'resetState',
+        value: function resetState() {
+            this.waiting();
         }
     }, {
         key: 'generateComb',
@@ -2733,7 +2750,6 @@ var Hive = function () {
         value: function updateQueen() {
             var queen = this.bees.queen[0];
             if (--queen.life == 0) {
-                //this.waiting();
                 // Generation des princess
                 this.generatePrincess();
                 // Generation des drones

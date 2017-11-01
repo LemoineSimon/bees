@@ -101,6 +101,7 @@ class Hive {
         this.generateComb();
     }
     waiting() {
+        this.currentState = 0;
         this.currentProgress = 0;
         this.currentTime = 0;
     }
@@ -112,15 +113,18 @@ class Hive {
         this.bees[role].push(new Bee({ role: role }));
     }
 
-    cleanSlot() {
-        let slots = this.dom.querySelector('.hive__production').querySelectorAll('.slot');
-        [].forEach.call(slots, function(slot) {
-            while (slot.firstChild) {
-                slot.removeChild(slot.firstChild);
-            }
+    isProductionEmpty() {
+        let droneEmpty = this.nursery.drone.filter(function(drone) {
+            return drone ? true : false;
         });
+        if (this.nursery.princess.length || droneEmpty.length) {
+            return false;
+        }
+        return true;
     }
-
+    resetState() {
+        this.waiting();
+    }
     generateComb() {
 
     }
@@ -134,7 +138,6 @@ class Hive {
     updateQueen() {
         let queen = this.bees.queen[0];
         if (--queen.life == 0) {
-            //this.waiting();
             // Generation des princess
             this.generatePrincess();
             // Generation des drones

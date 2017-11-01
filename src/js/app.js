@@ -11,7 +11,6 @@ let farm = new Vue({
         'hives': game.hives
     },
     methods: {
-
         addPrincess: function(index) {
             this.hives[index].addBee("princess");
         },
@@ -21,12 +20,22 @@ let farm = new Vue({
         start: function(index) {
             this.hives[index].start();
         },
-
+        isHiveProductionEmpty(index) {
+            return this.hives[index].isProductionEmpty();
+        },
+        canResetHiveState(index) {
+            if (!this.isHiveProductionEmpty(index)) {
+                return;
+            }
+            this.hives[index].resetState();
+        },
         collectPrincess: function(hiveIndex) {
             game.collectPrincess(hiveIndex);
+            this.canResetHiveState(hiveIndex);
         },
         collectDrone: function(hiveIndex, droneIndex) {
             game.collectDrone(hiveIndex, droneIndex);
+            this.canResetHiveState(hiveIndex);
         }
     },
     computed: {
