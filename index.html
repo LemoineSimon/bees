@@ -42,8 +42,8 @@
                         <div v-for="(drone,droneIndex) in hive.nursery.drone" class="slot">
                             <div v-if="drone" class="bee" v-bind:class="drone.type" :data-beerole="drone.role" @click="collectDrone(index,droneIndex)"></div>
                         </div>
-                        <div v-for="(loot,lootIndex) in hive.loots.length" class="slot">
-                            <div v-if="loot" class="bee" v-bind:class="loot.type" @click="collectLoot(index,lootIndex)"></div>
+                        <div v-for="(loot,lootIndex) in hive.loots" class="slot">
+                            <div v-if="loot" class="loot" v-bind:class="loot.name" :data-loottype="loot.type" @click="collectLoot(index,lootIndex)"></div>
                         </div>
                     </div>
                 </div>

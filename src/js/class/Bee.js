@@ -1,3 +1,5 @@
+import Comb from './Comb';
+
 class Bee {
     constructor(params) {
 
@@ -20,10 +22,11 @@ class Bee {
         this.life = 2;
         this.larveNumber = 2;
         this.produceComb = true;
+        this.comb = new Comb();
     }
 
     setDroneGene() {
-        this.life = 0;
+        this.life = 2;
     }
 
     swarming() {

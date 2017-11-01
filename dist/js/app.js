@@ -2442,6 +2442,7 @@ var farm = new _vue2.default({
         },
         collectLoot: function collectLoot(hiveIndex, lootIndex) {
             game.collectLoot(hiveIndex, lootIndex);
+            this.canResetHiveState(hiveIndex);
         }
     },
     computed: {
@@ -2462,7 +2463,7 @@ var statusBar = new _vue2.default({
     }
 });
 
-},{"./class/Game":145,"./vue":147}],144:[function(require,module,exports){
+},{"./class/Game":146,"./vue":148}],144:[function(require,module,exports){
 "use strict";
 
 var _classCallCheck2 = require("D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck");
@@ -2472,6 +2473,10 @@ var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 var _createClass2 = require("D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass");
 
 var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _Comb = require("./Comb");
+
+var _Comb2 = _interopRequireDefault(_Comb);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2502,11 +2507,12 @@ var Bee = function () {
             this.life = 2;
             this.larveNumber = 2;
             this.produceComb = true;
+            this.comb = new _Comb2.default();
         }
     }, {
         key: "setDroneGene",
         value: function setDroneGene() {
-            this.life = 0;
+            this.life = 2;
         }
     }, {
         key: "swarming",
@@ -2522,7 +2528,26 @@ var Bee = function () {
 
 module.exports = Bee;
 
-},{"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":17,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":18}],145:[function(require,module,exports){
+},{"./Comb":145,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":17,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":18}],145:[function(require,module,exports){
+'use strict';
+
+var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Comb = function Comb() {
+    (0, _classCallCheck3.default)(this, Comb);
+
+    this.name = 'comb';
+    this.type = 'classic';
+    this.quantity = 1;
+};
+
+module.exports = Comb;
+
+},{"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":17}],146:[function(require,module,exports){
 'use strict';
 
 var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
@@ -2586,7 +2611,7 @@ var Game = function () {
 
 module.exports = Game;
 
-},{"./Hive":146,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":17,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":18}],146:[function(require,module,exports){
+},{"./Hive":147,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":17,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":18}],147:[function(require,module,exports){
 'use strict';
 
 var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
@@ -2711,8 +2736,6 @@ var Hive = function () {
             this.currentProgress = 100;
 
             this.updateQueen();
-
-            this.generateComb();
         }
     }, {
         key: 'waiting',
@@ -2735,7 +2758,10 @@ var Hive = function () {
             var droneEmpty = this.nursery.drone.filter(function (drone) {
                 return drone ? true : false;
             });
-            if (this.nursery.princess.length || droneEmpty.length) {
+            var lootsEmpty = this.loots.filter(function (loot) {
+                return loot ? true : false;
+            });
+            if (this.nursery.princess.length || droneEmpty.length || lootsEmpty.length) {
                 return false;
             }
             return true;
@@ -2747,13 +2773,11 @@ var Hive = function () {
         }
     }, {
         key: 'generateComb',
-        value: function generateComb() {}
-    }, {
-        key: 'createComb',
-        value: function createComb() {
-            var div = document.createElement('div');
-            div.classList.add('comb');
-            return div;
+        value: function generateComb() {
+            if (!this.bees.queen[0].produceComb) {
+                return;
+            }
+            this.loots.fill(this.bees.queen[0].comb, 0, 1);
         }
     }, {
         key: 'updateQueen',
@@ -2791,7 +2815,7 @@ var Hive = function () {
 
 module.exports = Hive;
 
-},{"./Bee":144,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":17,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":18}],147:[function(require,module,exports){
+},{"./Bee":144,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":17,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":18}],148:[function(require,module,exports){
 (function (global){
 'use strict';
 

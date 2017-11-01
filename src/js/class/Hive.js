@@ -98,8 +98,6 @@ class Hive {
         this.currentProgress = 100;
 
         this.updateQueen();
-
-        this.generateComb();
     }
     waiting() {
         this.currentState = 0;
@@ -118,7 +116,10 @@ class Hive {
         let droneEmpty = this.nursery.drone.filter(function(drone) {
             return drone ? true : false;
         });
-        if (this.nursery.princess.length || droneEmpty.length) {
+        let lootsEmpty = this.loots.filter(function(loot) {
+            return loot ? true : false;
+        });
+        if (this.nursery.princess.length || droneEmpty.length || lootsEmpty.length) {
             return false;
         }
         return true;
@@ -127,13 +128,10 @@ class Hive {
         this.waiting();
     }
     generateComb() {
-
-    }
-
-    createComb() {
-        let div = document.createElement('div');
-        div.classList.add('comb');
-        return div;
+        if (!this.bees.queen[0].produceComb) {
+            return;
+        }
+        this.loots.fill(this.bees.queen[0].comb, 0, 1);
     }
 
     updateQueen() {
