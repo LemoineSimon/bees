@@ -2439,6 +2439,9 @@ var farm = new _vue2.default({
         collectDrone: function collectDrone(hiveIndex, droneIndex) {
             game.collectDrone(hiveIndex, droneIndex);
             this.canResetHiveState(hiveIndex);
+        },
+        collectLoot: function collectLoot(hiveIndex, lootIndex) {
+            game.collectLoot(hiveIndex, lootIndex);
         }
     },
     computed: {
@@ -2571,6 +2574,11 @@ var Game = function () {
             var drone = this.hives[hiveIndex].nursery.drone.splice(droneIndex, 1, null)[0];
             this.bees.drone.push(drone);
         }
+    }, {
+        key: 'collectLoot',
+        value: function collectLoot(hiveIndex, lootIndex) {
+            console.log(this.hives[hiveIndex].loots[lootIndex]);
+        }
     }]);
     return Game;
 }();
@@ -2606,8 +2614,9 @@ var Hive = function () {
         };
         this.nursery = {
             'princess': [],
-            'drone': new Array(6)
+            'drone': new Array(3)
         };
+        this.loots = new Array(3);
         this.temperature = 20;
         this.humidity = 20;
         this.currentTime = 0;

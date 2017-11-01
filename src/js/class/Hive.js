@@ -10,8 +10,9 @@ class Hive {
         };
         this.nursery = {
             'princess': [],
-            'drone': new Array(6)
+            'drone': new Array(3)
         }
+        this.loots = new Array(3);
         this.temperature = 20;
         this.humidity = 20;
         this.currentTime = 0;

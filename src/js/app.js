@@ -36,6 +36,9 @@ let farm = new Vue({
         collectDrone: function(hiveIndex, droneIndex) {
             game.collectDrone(hiveIndex, droneIndex);
             this.canResetHiveState(hiveIndex);
+        },
+        collectLoot: function(hiveIndex, lootIndex) {
+            game.collectLoot(hiveIndex, lootIndex);
         }
     },
     computed: {

@@ -28,6 +28,9 @@ class Game {
         let drone = this.hives[hiveIndex].nursery.drone.splice(droneIndex, 1, null)[0];
         this.bees.drone.push(drone);
     }
+    collectLoot(hiveIndex, lootIndex) {
+        console.log(this.hives[hiveIndex].loots[lootIndex]);
+    }
 }
 
 module.exports = Game;
