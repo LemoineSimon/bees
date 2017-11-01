@@ -2501,6 +2501,7 @@ var Bee = function () {
         value: function setPrincessGene() {
             this.life = 2;
             this.larveNumber = 2;
+            this.produceComb = true;
         }
     }, {
         key: "setDroneGene",

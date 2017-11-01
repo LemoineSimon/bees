@@ -88,6 +88,7 @@
         &:before,
         &:after {
             content: "";
+            z-index: 0;
             position: absolute;
             width: 0;
             border-left: 25px solid transparent;
@@ -102,17 +103,14 @@
             width: 0;
             border-top: 14.43px solid currentColor;
         }
-        .bee {
+        .bee,
+        .comb {
+            z-index: 1;
             position: absolute;
-            width: 40px;
-            height: 40px;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
-        }
-        .comb {
-            background-image: url('../img/src/bee_combs.1.png'), url('../img/src/bee_combs.0.png'), url('../img/src/bee_comb.png');
         }
     }
 }
