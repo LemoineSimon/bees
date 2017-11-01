@@ -1,9 +1,12 @@
+'use strict';
+
+const browserify = require('browserify');
+const source = require('vinyl-source-stream');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const cleanCSS = require('gulp-clean-css');
 const autoprefixer = require('gulp-autoprefixer');
-const babel = require('gulp-babel');
 
 const path = {
     css: 'dist/css/',
@@ -12,7 +15,7 @@ const path = {
         src: 'src/scss/page/*.scss'
     },
     js: {
-        src: 'src/js/*.js',
+        src: 'src/js/**/*.js',
         build: 'dist/js'
     }
 }
@@ -37,7 +40,7 @@ const cleanCssConfig = {
     }
 };
 
-gulp.task('scss', function() {
+gulp.task('scss', () => {
     gulp.src(path.scss.src)
         .pipe(sourcemaps.init())
         .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
@@ -46,3 +49,22 @@ gulp.task('scss', function() {
         .pipe(sourcemaps.write('./maps'))
         .pipe(gulp.dest(path.css));
 });
+
+gulp.task('scripts', function() {
+
+    let b = browserify({
+        entries: './src/js/app.js',
+        debug: false,
+        transform: ['babelify']
+    });
+
+    return b.bundle()
+        .pipe(source('app.js'))
+        .on('error', console.log)
+        .pipe(gulp.dest(path.js.build));
+});
+
+gulp.task('watch', function() {
+    gulp.watch(path.js.src, ['scripts']);
+    gulp.watch(path.scss.watch, ['scss']);
+})

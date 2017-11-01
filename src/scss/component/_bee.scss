@@ -1,15 +1,15 @@
 .slot .bee[data-beerole="princess"] {
-    background-image: url('../img/src/body1.png'), url('../img/src/princess.body2.png'), url('../img/src/princess.outline.png');
+    background-image: url('../../img/src/body1.png'), url('../../img/src/princess.body2.png'), url('../../img/src/princess.outline.png');
     animation: playBee 5s 2s steps(5) infinite;
 }
 
 .slot .bee[data-beerole="queen"] {
-    background-image: url('../img/src/body1.png'), url('../img/src/queen.body2.png'), url('../img/src/queen.outline.png');
+    background-image: url('../../img/src/body1.png'), url('../../img/src/queen.body2.png'), url('../../img/src/queen.outline.png');
     animation: playBee 5s 2s steps(5) infinite;
 }
 
 .slot .bee[data-beerole="drone"] {
-    background-image: url('../img/src/body1.png'), url('../img/src/drone.body2.png'), url('../img/src/drone.outline.png');
+    background-image: url('../../img/src/body1.png'), url('../../img/src/drone.body2.png'), url('../../img/src/drone.outline.png');
     animation: playBee 5s 3.5s steps(5) infinite;
 }
 

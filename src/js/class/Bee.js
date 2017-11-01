@@ -32,3 +32,5 @@ class Bee {
         this.role = "queen";
     }
 }
+
+module.exports = Bee;

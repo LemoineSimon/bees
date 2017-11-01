@@ -1,3 +1,5 @@
+import Hive from './Hive';
+
 class Game {
     constructor() {
         this.money = 0;
@@ -27,3 +29,5 @@ class Game {
         this.bees.drone.push(drone);
     }
 }
+
+module.exports = Game;

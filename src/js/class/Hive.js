@@ -1,3 +1,5 @@
+import Bee from './Bee';
+
 class Hive {
     constructor(id) {
         this.id = id;
@@ -153,3 +155,5 @@ class Hive {
         }
     }
 }
+
+module.exports = Hive;
