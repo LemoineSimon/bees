@@ -13,7 +13,6 @@ class Game {
             wood: [],
             comb: []
         };
-        this.farm = document.querySelector(".farm");
     }
 
     addHive() {

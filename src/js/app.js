@@ -1,6 +1,8 @@
 import Vue from './vue';
 import Game from './class/Game';
+import State from './class/StateManager';
 
+const state = new State();
 
 const game = new Game();
 game.addHive();
@@ -58,5 +60,10 @@ let statusBar = new Vue({
         'bees': game.bees,
         'hives': game.hives.length,
         'ressources': game.ressources
+    },
+    methods: {
+        saveState: function() {
+            state.save(game);
+        }
     }
 });

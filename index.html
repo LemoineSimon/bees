@@ -20,6 +20,9 @@
             <div class="status-bar__item">
                 <b>Hives :</b> {{ hives }}
             </div>
+            <div class="status-bar__item">
+                <button type="button" @click="saveState">Save</button>
+            </div>
         </div>
         <div id="farm">
             <div v-for="(hive, index) in hives" class="hive" :index="index" :key="hive.id" :data-state="currentState[index]">

@@ -2402,7 +2402,13 @@ var _Game = require('./class/Game');
 
 var _Game2 = _interopRequireDefault(_Game);
 
+var _StateManager = require('./class/StateManager');
+
+var _StateManager2 = _interopRequireDefault(_StateManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var state = new _StateManager2.default();
 
 var game = new _Game2.default();
 game.addHive();
@@ -2461,10 +2467,15 @@ var statusBar = new _vue2.default({
         'bees': game.bees,
         'hives': game.hives.length,
         'ressources': game.ressources
+    },
+    methods: {
+        saveState: function saveState() {
+            state.save(game);
+        }
     }
 });
 
-},{"./class/Game":146,"./vue":148}],144:[function(require,module,exports){
+},{"./class/Game":146,"./class/StateManager":148,"./vue":149}],144:[function(require,module,exports){
 "use strict";
 
 var _classCallCheck2 = require("D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck");
@@ -2580,7 +2591,6 @@ var Game = function () {
             wood: [],
             comb: []
         };
-        this.farm = document.querySelector(".farm");
     }
 
     (0, _createClass3.default)(Game, [{
@@ -2818,6 +2828,57 @@ var Hive = function () {
 module.exports = Hive;
 
 },{"./Bee":144,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":17,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":18}],148:[function(require,module,exports){
+'use strict';
+
+var _stringify = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var StateManager = function () {
+    function StateManager() {
+        (0, _classCallCheck3.default)(this, StateManager);
+
+        this.game;
+        this.MAX_STORE = 5101000;
+    }
+
+    (0, _createClass3.default)(StateManager, [{
+        key: 'save',
+        value: function save(game) {
+            var strGame = this.constructor.stringifyGame(game);
+            if (strGame > this.MAX_STORE) {
+                return this.saveError();
+            }
+            window.localStorage.setItem('bees', strGame);
+        }
+    }, {
+        key: 'saveError',
+        value: function saveError() {
+            // Display error
+            console.log('Sorry, the actual save is over Store Limit : ', this.MAX_STORE);
+        }
+    }], [{
+        key: 'stringifyGame',
+        value: function stringifyGame(game) {
+            return (0, _stringify2.default)(game);
+        }
+    }]);
+    return StateManager;
+}();
+
+module.exports = StateManager;
+
+},{"D:\\www\\bees\\node_modules\\babel-runtime/core-js/json/stringify":1,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":17,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":18}],149:[function(require,module,exports){
 (function (global){
 'use strict';
 
