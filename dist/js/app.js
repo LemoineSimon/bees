@@ -2411,65 +2411,73 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var state = new _StateManager2.default();
 
 var game = new _Game2.default();
-game.addHive();
 
-var farm = new _vue2.default({
-    el: "#farm",
-    data: {
-        'hives': game.hives
-    },
+// let farm = new Vue({
+_vue2.default.component('hive', {
+    template: "#hive",
+    props: ['hive'],
     methods: {
-        addPrincess: function addPrincess(index) {
-            this.hives[index].addBee("princess");
+        addPrincess: function addPrincess() {
+            this.hive.addBee("princess");
         },
-        addDrone: function addDrone(index) {
-            this.hives[index].addBee("drone");
+        addDrone: function addDrone() {
+            this.hive.addBee("drone");
         },
-        start: function start(index) {
-            this.hives[index].start();
+        start: function start() {
+            this.hive.start();
         },
-        isHiveProductionEmpty: function isHiveProductionEmpty(index) {
-            return this.hives[index].isProductionEmpty();
+        isHiveProductionEmpty: function isHiveProductionEmpty() {
+            return this.hive.isProductionEmpty();
         },
-        canResetHiveState: function canResetHiveState(index) {
-            if (!this.isHiveProductionEmpty(index)) {
+        canResetHiveState: function canResetHiveState() {
+            if (!this.isHiveProductionEmpty()) {
                 return;
             }
-            this.hives[index].resetState();
+            this.hive.resetState();
         },
 
-        collectPrincess: function collectPrincess(hiveIndex) {
-            game.collectPrincess(hiveIndex);
-            this.canResetHiveState(hiveIndex);
+        collectPrincess: function collectPrincess() {
+            game.collectPrincess(this.hive);
+            this.canResetHiveState();
         },
-        collectDrone: function collectDrone(hiveIndex, droneIndex) {
-            game.collectDrone(hiveIndex, droneIndex);
-            this.canResetHiveState(hiveIndex);
+        collectDrone: function collectDrone(droneIndex) {
+            game.collectDrone(this.hive, droneIndex);
+            this.canResetHiveState();
         },
-        collectLoot: function collectLoot(hiveIndex, lootIndex) {
-            game.collectLoot(hiveIndex, lootIndex);
-            this.canResetHiveState(hiveIndex);
+        collectLoot: function collectLoot(lootIndex) {
+            game.collectLoot(this.hive, lootIndex);
+            this.canResetHiveState();
         }
     },
     computed: {
         currentState: function currentState() {
-            return this.hives.map(function (hive) {
-                return hive.states[hive.currentState].type;
-            });
+            return this.hive.states[this.hive.currentState].type;
         }
     }
 });
 
-var statusBar = new _vue2.default({
-    el: "#statusBar",
+var app = new _vue2.default({
+    el: "#app",
     data: {
-        'money': game.money,
-        'bees': game.bees,
-        'hives': game.hives.length,
-        'ressources': game.ressources
+        state: state,
+        game: game
     },
     methods: {
-        saveState: function saveState() {
+        newGame: function newGame() {
+            if (state.saveExist()) {
+                console.log('Are you sure');
+                return;
+            }
+            game.init();
+            game.addHive();
+        },
+        continueGame: function continueGame() {
+            if (!state.saveExist()) {
+                console.log('save not exist');
+                return;
+            }
+        },
+        saveGame: function saveGame() {
             state.save(game);
         }
     }
@@ -2580,6 +2588,7 @@ var Game = function () {
     function Game() {
         (0, _classCallCheck3.default)(this, Game);
 
+        this.start = false;
         this.money = 0;
         this.hives = [];
         this.bees = {
@@ -2594,6 +2603,11 @@ var Game = function () {
     }
 
     (0, _createClass3.default)(Game, [{
+        key: 'init',
+        value: function init() {
+            this.start = true;
+        }
+    }, {
         key: 'addHive',
         value: function addHive() {
             var hive = new _Hive2.default(this.hives.length);
@@ -2601,20 +2615,20 @@ var Game = function () {
         }
     }, {
         key: 'collectPrincess',
-        value: function collectPrincess(hiveIndex) {
-            var princess = this.hives[hiveIndex].nursery.princess.splice(0, 1)[0];
+        value: function collectPrincess(hive) {
+            var princess = hive.nursery.princess.splice(0, 1)[0];
             this.bees.princess.push(princess);
         }
     }, {
         key: 'collectDrone',
-        value: function collectDrone(hiveIndex, droneIndex) {
-            var drone = this.hives[hiveIndex].nursery.drone.splice(droneIndex, 1, null)[0];
+        value: function collectDrone(hive, droneIndex) {
+            var drone = hive.nursery.drone.splice(droneIndex, 1, null)[0];
             this.bees.drone.push(drone);
         }
     }, {
         key: 'collectLoot',
-        value: function collectLoot(hiveIndex, lootIndex) {
-            var loot = this.hives[hiveIndex].loots.splice(lootIndex, 1, null)[0];
+        value: function collectLoot(hive, lootIndex) {
+            var loot = hive.loots.splice(lootIndex, 1, null)[0];
             this.ressources[loot.name].push(loot);
         }
     }]);
@@ -2853,21 +2867,28 @@ var StateManager = function () {
     }
 
     (0, _createClass3.default)(StateManager, [{
+        key: 'saveExist',
+        value: function saveExist() {
+            if (this.constructor.getSave()) {
+                return true;
+            }
+            return false;
+        }
+    }, {
         key: 'save',
         value: function save(game) {
             var strGame = this.constructor.stringifyGame(game);
             if (strGame > this.MAX_STORE) {
-                return this.saveError();
+                return console.log('Sorry, the actual save is over Store Limit : ', this.MAX_STORE);
             }
             window.localStorage.setItem('bees', strGame);
         }
-    }, {
-        key: 'saveError',
-        value: function saveError() {
-            // Display error
-            console.log('Sorry, the actual save is over Store Limit : ', this.MAX_STORE);
-        }
     }], [{
+        key: 'getSave',
+        value: function getSave() {
+            return window.localStorage.getItem('bees');
+        }
+    }, {
         key: 'stringifyGame',
         value: function stringifyGame(game) {
             return (0, _stringify2.default)(game);

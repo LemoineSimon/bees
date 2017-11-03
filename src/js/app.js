@@ -4,65 +4,76 @@ import State from './class/StateManager';
 
 const state = new State();
 
-const game = new Game();
-game.addHive();
 
-let farm = new Vue({
-    el: "#farm",
-    data: {
-        'hives': game.hives
-    },
+const game = new Game();
+
+// let farm = new Vue({
+Vue.component('hive', {
+    template: "#hive",
+    props: [
+        'hive'
+    ],
     methods: {
-        addPrincess: function(index) {
-            this.hives[index].addBee("princess");
+        addPrincess: function() {
+            this.hive.addBee("princess");
         },
-        addDrone: function(index) {
-            this.hives[index].addBee("drone");
+        addDrone: function() {
+            this.hive.addBee("drone");
         },
-        start: function(index) {
-            this.hives[index].start();
+        start: function() {
+            this.hive.start();
         },
-        isHiveProductionEmpty(index) {
-            return this.hives[index].isProductionEmpty();
+        isHiveProductionEmpty() {
+            return this.hive.isProductionEmpty();
         },
-        canResetHiveState(index) {
-            if (!this.isHiveProductionEmpty(index)) {
+        canResetHiveState() {
+            if (!this.isHiveProductionEmpty()) {
                 return;
             }
-            this.hives[index].resetState();
+            this.hive.resetState();
         },
-        collectPrincess: function(hiveIndex) {
-            game.collectPrincess(hiveIndex);
-            this.canResetHiveState(hiveIndex);
+        collectPrincess: function() {
+            game.collectPrincess(this.hive);
+            this.canResetHiveState();
         },
-        collectDrone: function(hiveIndex, droneIndex) {
-            game.collectDrone(hiveIndex, droneIndex);
-            this.canResetHiveState(hiveIndex);
+        collectDrone: function(droneIndex) {
+            game.collectDrone(this.hive, droneIndex);
+            this.canResetHiveState();
         },
-        collectLoot: function(hiveIndex, lootIndex) {
-            game.collectLoot(hiveIndex, lootIndex);
-            this.canResetHiveState(hiveIndex);
+        collectLoot: function(lootIndex) {
+            game.collectLoot(this.hive, lootIndex);
+            this.canResetHiveState();
         }
     },
     computed: {
         currentState: function() {
-            return this.hives.map(function(hive) {
-                return hive.states[hive.currentState].type;
-            });
+            return this.hive.states[this.hive.currentState].type;
         }
     }
 });
 
-let statusBar = new Vue({
-    el: "#statusBar",
+let app = new Vue({
+    el: "#app",
     data: {
-        'money': game.money,
-        'bees': game.bees,
-        'hives': game.hives.length,
-        'ressources': game.ressources
+        state: state,
+        game: game
     },
     methods: {
-        saveState: function() {
+        newGame: function() {
+            if (state.saveExist()) {
+                console.log('Are you sure');
+                return;
+            }
+            game.init();
+            game.addHive();
+        },
+        continueGame: function() {
+            if (!state.saveExist()) {
+                console.log('save not exist');
+                return;
+            }
+        },
+        saveGame: function() {
             state.save(game);
         }
     }

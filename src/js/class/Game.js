@@ -2,6 +2,7 @@ import Hive from './Hive';
 
 class Game {
     constructor() {
+        this.start = false;
         this.money = 0;
         this.hives = [];
         this.bees = {
@@ -14,21 +15,24 @@ class Game {
             comb: []
         };
     }
+    init() {
+        this.start = true;
+    }
 
     addHive() {
         let hive = new Hive(this.hives.length);
         this.hives.push(hive);
     }
-    collectPrincess(hiveIndex) {
-        let princess = this.hives[hiveIndex].nursery.princess.splice(0, 1)[0];
+    collectPrincess(hive) {
+        let princess = hive.nursery.princess.splice(0, 1)[0];
         this.bees.princess.push(princess);
     }
-    collectDrone(hiveIndex, droneIndex) {
-        let drone = this.hives[hiveIndex].nursery.drone.splice(droneIndex, 1, null)[0];
+    collectDrone(hive, droneIndex) {
+        let drone = hive.nursery.drone.splice(droneIndex, 1, null)[0];
         this.bees.drone.push(drone);
     }
-    collectLoot(hiveIndex, lootIndex) {
-        let loot = this.hives[hiveIndex].loots.splice(lootIndex, 1, null)[0];
+    collectLoot(hive, lootIndex) {
+        let loot = hive.loots.splice(lootIndex, 1, null)[0];
         this.ressources[loot.name].push(loot);
     }
 }

@@ -8,27 +8,38 @@
 </head>
 
 <body>
-    <div id="game">
-        <div id="statusBar" class="status-bar">
-            <div class="status-bar__item">
-                <b>Money :</b> {{ money }}
+    <div id="app">
+        <div class="menu" v-if="!game.start">
+            <h1>Bees</h1>
+            <button type="button" @click="newGame">New game</button>
+            <button type="button" @click="continueGame">Continue game</button>
+        </div>
+        <div id="game" v-if="game.start">
+            <div id="statusBar" class="status-bar">
+                <div class="status-bar__item">
+                    <b>Money :</b> {{ game.money }}
+                </div>
+                <div class="status-bar__item">
+                    <div><b>Princess :</b> {{ game.bees.princess.length }}</div>
+                    <div><b>Drones :</b> {{ game.bees.drone.length }}</div>
+                </div>
+                <div class="status-bar__item">
+                    <b>Hives :</b> {{ game.hives.length }}
+                </div>
+                <div class="status-bar__item">
+                    <button type="button" @click="saveGame">Save</button>
+                </div>
             </div>
-            <div class="status-bar__item">
-                <div><b>Princess :</b> {{ bees.princess.length }}</div>
-                <div><b>Drones :</b> {{ bees.drone.length }}</div>
-            </div>
-            <div class="status-bar__item">
-                <b>Hives :</b> {{ hives }}
-            </div>
-            <div class="status-bar__item">
-                <button type="button" @click="saveState">Save</button>
+            <div id="farm" :hives="game.hives">
+                <hive v-for="(hive, index) in game.hives" :hive="hive" :index="index" :key="hive.id"></hive>
             </div>
         </div>
-        <div id="farm">
-            <div v-for="(hive, index) in hives" class="hive" :index="index" :key="hive.id" :data-state="currentState[index]">
-                <progress :value="hive.currentProgress" max="100" class="start"></progress>
-                <h3 class="hive__name">#{{ hive.id }}</h3>
-                <div class="hive__slot">
+    </div>
+    <template id="hive">
+        <div class="hive" :data-state="currentState">
+            <progress :value="hive.currentProgress" max="100" class="start"></progress>
+            <h3 class="hive__name">#{{hive.id}}</h3>
+            <div class="hive__slot">
                     <div class="hive__starter">
                         <div class="slot">
                             <div v-if="hive.bees.queen.length > 0" :data-beerole="hive.bees.queen[0].role" class="bee"></div>
@@ -40,28 +51,27 @@
                     </div>
                     <div class="hive__production">
                         <div class="slot">
-                            <div v-if="hive.nursery.princess.length > 0" class="bee" v-bind:class="[hive.nursery.princess[0].type]" :data-beerole="hive.nursery.princess[0].role" @click="collectPrincess(index)"></div>
+                            <div v-if="hive.nursery.princess.length > 0" class="bee" v-bind:class="[hive.nursery.princess[0].type]" :data-beerole="hive.nursery.princess[0].role" @click="collectPrincess"></div>
                         </div>
                         <div v-for="(drone,droneIndex) in hive.nursery.drone" class="slot">
-                            <div v-if="drone" class="bee" v-bind:class="drone.type" :data-beerole="drone.role" @click="collectDrone(index,droneIndex)"></div>
+                            <div v-if="drone" class="bee" v-bind:class="drone.type" :data-beerole="drone.role" @click="collectDrone(droneIndex)"></div>
                         </div>
                         <div v-for="(loot,lootIndex) in hive.loots" class="slot">
-                            <div v-if="loot" class="loot" v-bind:class="loot.name" :data-loottype="loot.type" @click="collectLoot(index,lootIndex)"></div>
+                            <div v-if="loot" class="loot" v-bind:class="loot.name" :data-loottype="loot.type" @click="collectLoot(lootIndex)"></div>
                         </div>
                     </div>
                 </div>
                 <div>
                     <div>
-                        <button class="hive__button" type="button" @click="addPrincess(index)">Add Princess</button>
-                        <button class="hive__button" type="button" @click="addDrone(index)">Add Drone</button>
+                        <button class="hive__button" type="button" @click="addPrincess">Add Princess</button>
+                        <button class="hive__button" type="button" @click="addDrone">Add Drone</button>
                     </div>
                     <div>
-                        <button class="hive__button" type="button" @click="start(index)">Start Hive</button>
+                        <button class="hive__button" type="button" @click="start">Start Hive</button>
                     </div>
                 </div>
-            </div>
         </div>
-    </div>
+    </template>
     <script src="dist/js/app.js "></script>
 </body>
 
