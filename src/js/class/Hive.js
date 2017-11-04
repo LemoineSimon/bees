@@ -36,7 +36,32 @@ class Hive {
             }
         ];
     }
-
+    _load(data) {
+        Object.assign(this, data);
+        this._loadBees(data.bees);
+        this._loadNursery(data.nursery);
+    }
+    _loadBees(bees) {
+        for (let role in bees) {
+            for (let i = 0; i < bees[role].length; i++) {
+                let beeParams = bees[role][i];
+                let bee = new Bee(beeParams);
+                this.bees[role].fill(bee, i, i + 1);
+            }
+        }
+    }
+    _loadNursery(nursery) {
+        for (let beeRole in nursery) {
+            for (let i = 0; i < nursery[beeRole].length; i++) {
+                let beeParams = nursery[beeRole][i];
+                if (beeParams == null) {
+                    continue;
+                }
+                let bee = new Bee(beeParams);
+                this.nursery[beeRole].fill(bee, i, i + 1);
+            }
+        }
+    }
     progress() {
         let self = this;
         let now = Date.now();
@@ -80,7 +105,9 @@ class Hive {
     run() {
         if (this.bees.queen.length == 0) {
             this.bees.drone.shift();
+            console.log(this.bees.princess);
             let queen = this.bees.princess[0];
+            console.log(queen);
             queen.swarming();
             this.bees.queen.push(queen);
             this.bees.princess.shift();

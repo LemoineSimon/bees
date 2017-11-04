@@ -1,6 +1,5 @@
 class StateManager {
     constructor() {
-        this.game;
         this.MAX_STORE = 5101000;
     }
     static getSave() {
@@ -13,17 +12,17 @@ class StateManager {
         return false;
     }
     save(game) {
-        let strGame = this.constructor.stringifyGame(game);
+        let strGame = JSON.stringify(game);
         if (strGame > this.MAX_STORE) {
             return console.log('Sorry, the actual save is over Store Limit : ', this.MAX_STORE);
         }
         window.localStorage.setItem('bees', strGame);
-
+    }
+    load() {
+        let save = window.localStorage.getItem('bees');
+        return JSON.parse(save);
     }
 
-    static stringifyGame(game) {
-        return JSON.stringify(game);
-    }
 }
 
 module.exports = StateManager;

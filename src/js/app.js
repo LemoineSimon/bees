@@ -4,7 +4,6 @@ import State from './class/StateManager';
 
 const state = new State();
 
-
 const game = new Game();
 
 // let farm = new Vue({
@@ -66,12 +65,18 @@ let app = new Vue({
             }
             game.init();
             game.addHive();
+            console.log(this.game.hives);
         },
         continueGame: function() {
             if (!state.saveExist()) {
                 console.log('save not exist');
                 return;
             }
+            let load = state.load();
+            game._load(load);
+            //this.game = Object.assign({}, game, load);
+            //this.game.hives = Object.assign({}, game.hives, load.hives);
+            console.log(this.game.hives);
         },
         saveGame: function() {
             state.save(game);
