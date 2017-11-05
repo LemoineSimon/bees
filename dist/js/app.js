@@ -2527,8 +2527,6 @@ var app = new _vue2.default({
             }
             var load = state.load();
             game._load(load);
-            //this.game = Object.assign({}, game, load);
-            //this.game.hives = Object.assign({}, game.hives, load.hives);
             console.log(this.game.hives);
         },
         saveGame: function saveGame() {
@@ -2670,8 +2668,7 @@ var Game = function () {
         value: function _load(params) {
             this.start = params.start;
             this.money = params.money;
-            //this.bees = params.bees;
-            //this.ressources = params.ressources;
+            this.ressources = params.ressources;
             this._loadHives(params.hives);
             this._loadBees(params.bees);
         }

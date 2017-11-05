@@ -74,8 +74,6 @@ let app = new Vue({
             }
             let load = state.load();
             game._load(load);
-            //this.game = Object.assign({}, game, load);
-            //this.game.hives = Object.assign({}, game.hives, load.hives);
             console.log(this.game.hives);
         },
         saveGame: function() {

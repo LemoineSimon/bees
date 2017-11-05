@@ -60,7 +60,7 @@ gulp.task('scripts', function() {
 
     return b.bundle()
         .pipe(source('app.js'))
-        .on('error', console.log)
+        .on('error', console.error.bind(console))
         .pipe(gulp.dest(path.js.build));
 });
 

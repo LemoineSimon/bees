@@ -22,8 +22,7 @@ class Game {
     _load(params) {
         this.start = params.start;
         this.money = params.money;
-        //this.bees = params.bees;
-        //this.ressources = params.ressources;
+        this.ressources = params.ressources;
         this._loadHives(params.hives);
         this._loadBees(params.bees);
     }
