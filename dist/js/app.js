@@ -2517,8 +2517,6 @@ var app = new _vue2.default({
                 return;
             }
             game.init();
-            game.addHive();
-            console.log(this.game.hives);
         },
         continueGame: function continueGame() {
             if (!state.saveExist()) {
@@ -2527,10 +2525,12 @@ var app = new _vue2.default({
             }
             var load = state.load();
             game._load(load);
-            console.log(this.game.hives);
         },
         saveGame: function saveGame() {
             state.save(game);
+        },
+        addHive: function addHive() {
+            game.addHive();
         },
         loggingWood: function loggingWood() {
             game.loggingWood();
@@ -2698,8 +2698,13 @@ var Game = function () {
     }, {
         key: 'addHive',
         value: function addHive() {
+            if (this.ressources.wood <= 200) {
+                console.log('Not enough wood');
+                return;
+            }
             var hive = new _Hive2.default(this.hives.length);
             this.hives.push(hive);
+            this.ressources.wood -= 200;
         }
     }, {
         key: 'collectPrincess',

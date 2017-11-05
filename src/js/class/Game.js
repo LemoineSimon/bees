@@ -44,8 +44,13 @@ class Game {
         }
     }
     addHive() {
+        if (this.ressources.wood <= 200) {
+            console.log('Not enough wood');
+            return
+        }
         let hive = new Hive(this.hives.length);
         this.hives.push(hive);
+        this.ressources.wood -= 200;
     }
     collectPrincess(hive) {
         let princess = hive.nursery.princess.splice(0, 1)[0];

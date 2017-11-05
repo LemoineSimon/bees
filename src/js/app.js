@@ -64,8 +64,6 @@ let app = new Vue({
                 return;
             }
             game.init();
-            game.addHive();
-            console.log(this.game.hives);
         },
         continueGame: function() {
             if (!state.saveExist()) {
@@ -74,10 +72,12 @@ let app = new Vue({
             }
             let load = state.load();
             game._load(load);
-            console.log(this.game.hives);
         },
         saveGame: function() {
             state.save(game);
+        },
+        addHive: function() {
+            game.addHive();
         },
         loggingWood: function() {
             game.loggingWood();

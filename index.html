@@ -15,29 +15,34 @@
             <button type="button" @click="continueGame">Continue game</button>
         </div>
         <div id="game" v-if="game.start">
-            <div id="statusBar" class="status-bar">
-                <div class="status-bar__item">
+            <div id="statusBar" class="bar bar--status">
+                <div class="bar__item">
                     <b>Money :</b> {{ game.money }}
                 </div>
-                <div class="status-bar__item">
+                <div class="bar__item">
                     <div><b>Princess :</b> {{ game.bees.princess.length }}</div>
                     <div><b>Drones :</b> {{ game.bees.drone.length }}</div>
                 </div>
-                <div class="status-bar__item">
+                <div class="bar__item">
                     <b>Hives :</b> {{ game.hives.length }}
                 </div>
-                <div class="status-bar__item">
+                <div class="bar__item">
                     <b>Combs :</b> {{ game.ressources.comb.length }}
                 </div>
-                <div class="status-bar__item">
+                <div class="bar__item">
                     <b>Wood :</b> {{ game.ressources.wood }}
                 </div>
-                <div class="status-bar__item">
+                <div class="bar__item">
                     <button type="button" @click="saveGame">Save</button>
                 </div>
             </div>
-            <div class="action-bar">
-                <button type="button" @click="loggingWood">Logging wood</button>
+            <div class="bar bar--action">
+                <div class="bar__item">
+                    <button type="button" @click="loggingWood">Logging wood</button>
+                </div>
+                <div class="bar__item">
+                    <button type="button" @click="addHive">Add hive</button>
+                </div>
             </div>
             <div id="farm" :hives="game.hives">
                 <hive v-for="(hive, index) in game.hives" :hive="hive" :index="index" :key="hive.id"></hive>
