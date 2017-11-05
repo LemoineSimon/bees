@@ -2531,6 +2531,9 @@ var app = new _vue2.default({
         },
         saveGame: function saveGame() {
             state.save(game);
+        },
+        loggingWood: function loggingWood() {
+            game.loggingWood();
         }
     }
 });
@@ -2653,7 +2656,7 @@ var Game = function () {
         };
         this.ressources = {
             honey: [],
-            wood: [],
+            wood: 0,
             comb: []
         };
     }
@@ -2671,6 +2674,26 @@ var Game = function () {
             this.ressources = params.ressources;
             this._loadHives(params.hives);
             this._loadBees(params.bees);
+        }
+    }, {
+        key: '_loadHives',
+        value: function _loadHives(hives) {
+            for (var i = 0; i < hives.length; i++) {
+                var tempHive = new _Hive2.default(i);
+                tempHive._load(hives[i]);
+                this.hives.push(tempHive);
+            }
+        }
+    }, {
+        key: '_loadBees',
+        value: function _loadBees(bees) {
+            for (var role in bees) {
+                for (var i = 0; i < bees[role].length; i++) {
+                    var beeParams = bees[role][i];
+                    var bee = new _Bee2.default(beeParams);
+                    this.bees[role].push(bee);
+                }
+            }
         }
     }, {
         key: 'addHive',
@@ -2697,24 +2720,9 @@ var Game = function () {
             this.ressources[loot.name].push(loot);
         }
     }, {
-        key: '_loadHives',
-        value: function _loadHives(hives) {
-            for (var i = 0; i < hives.length; i++) {
-                var tempHive = new _Hive2.default(i);
-                tempHive._load(hives[i]);
-                this.hives.push(tempHive);
-            }
-        }
-    }, {
-        key: '_loadBees',
-        value: function _loadBees(bees) {
-            for (var role in bees) {
-                for (var i = 0; i < bees[role].length; i++) {
-                    var beeParams = bees[role][i];
-                    var bee = new _Bee2.default(beeParams);
-                    this.bees[role].push(bee);
-                }
-            }
+        key: 'loggingWood',
+        value: function loggingWood() {
+            this.ressources['wood'] += parseInt(2);
         }
     }]);
     return Game;

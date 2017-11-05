@@ -30,8 +30,14 @@
                     <b>Combs :</b> {{ game.ressources.comb.length }}
                 </div>
                 <div class="status-bar__item">
+                    <b>Wood :</b> {{ game.ressources.wood }}
+                </div>
+                <div class="status-bar__item">
                     <button type="button" @click="saveGame">Save</button>
                 </div>
+            </div>
+            <div class="action-bar">
+                <button type="button" @click="loggingWood">Logging wood</button>
             </div>
             <div id="farm" :hives="game.hives">
                 <hive v-for="(hive, index) in game.hives" :hive="hive" :index="index" :key="hive.id"></hive>

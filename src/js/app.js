@@ -78,6 +78,9 @@ let app = new Vue({
         },
         saveGame: function() {
             state.save(game);
+        },
+        loggingWood: function() {
+            game.loggingWood();
         }
     }
 });

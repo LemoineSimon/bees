@@ -12,7 +12,7 @@ class Game {
         };
         this.ressources = {
             honey: [],
-            wood: [],
+            wood: 0,
             comb: []
         };
     }
@@ -25,23 +25,6 @@ class Game {
         this.ressources = params.ressources;
         this._loadHives(params.hives);
         this._loadBees(params.bees);
-    }
-
-    addHive() {
-        let hive = new Hive(this.hives.length);
-        this.hives.push(hive);
-    }
-    collectPrincess(hive) {
-        let princess = hive.nursery.princess.splice(0, 1)[0];
-        this.bees.princess.push(princess);
-    }
-    collectDrone(hive, droneIndex) {
-        let drone = hive.nursery.drone.splice(droneIndex, 1, null)[0];
-        this.bees.drone.push(drone);
-    }
-    collectLoot(hive, lootIndex) {
-        let loot = hive.loots.splice(lootIndex, 1, null)[0];
-        this.ressources[loot.name].push(loot);
     }
 
     _loadHives(hives) {
@@ -60,6 +43,26 @@ class Game {
             }
         }
     }
+    addHive() {
+        let hive = new Hive(this.hives.length);
+        this.hives.push(hive);
+    }
+    collectPrincess(hive) {
+        let princess = hive.nursery.princess.splice(0, 1)[0];
+        this.bees.princess.push(princess);
+    }
+    collectDrone(hive, droneIndex) {
+        let drone = hive.nursery.drone.splice(droneIndex, 1, null)[0];
+        this.bees.drone.push(drone);
+    }
+    collectLoot(hive, lootIndex) {
+        let loot = hive.loots.splice(lootIndex, 1, null)[0];
+        this.ressources[loot.name].push(loot);
+    }
+    loggingWood() {
+        this.ressources['wood'] += parseInt(2);
+    }
+
 }
 
 module.exports = Game;
