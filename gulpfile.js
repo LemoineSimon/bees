@@ -42,11 +42,11 @@ const cleanCssConfig = {
 
 gulp.task('scss', () => {
     gulp.src(path.scss.src)
-        .pipe(sourcemaps.init())
+        //.pipe(sourcemaps.init())
         .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
         .pipe(autoprefixer(autoprefixerOpts))
         .pipe(cleanCSS(cleanCssConfig))
-        .pipe(sourcemaps.write('./maps'))
+        //.pipe(sourcemaps.write('./maps'))
         .pipe(gulp.dest(path.css));
 });
 

@@ -9,10 +9,12 @@
 
 <body>
     <div id="app">
-        <div class="menu" v-if="!game.start">
-            <h1>Bees</h1>
-            <button type="button" @click="newGame">New game</button>
-            <button type="button" @click="continueGame">Continue game</button>
+        <div class="title-screen" v-if="!game.start">
+            <div class="container">
+                <h1>Bees</h1>
+                <button type="button" @click="newGame">New game</button>
+                <button type="button" @click="continueGame">Continue game</button>
+            </div>
         </div>
         <div id="game" v-if="game.start">
             <div id="statusBar" class="bar bar--status">
