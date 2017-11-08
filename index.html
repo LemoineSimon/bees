@@ -45,6 +45,9 @@
                 <div class="bar__item">
                     <button type="button" @click="addHive">Add hive</button>
                 </div>
+                <div class="bar__item">
+                    <button type="button" @click="catchBees">Catch some bees</button>
+                </div>
             </div>
             <div id="farm" :hives="game.hives">
                 <hive v-for="(hive, index) in game.hives" :hive="hive" :index="index" :key="hive.id"></hive>

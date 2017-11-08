@@ -81,6 +81,9 @@ let app = new Vue({
         },
         loggingWood: function() {
             game.loggingWood();
+        },
+        catchBees: function() {
+            game.catchBees();
         }
     }
 });

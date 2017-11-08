@@ -2534,11 +2534,14 @@ var app = new _vue2.default({
         },
         loggingWood: function loggingWood() {
             game.loggingWood();
+        },
+        catchBees: function catchBees() {
+            game.catchBees();
         }
     }
 });
 
-},{"./class/Game":150,"./class/StateManager":152,"./vue":153}],148:[function(require,module,exports){
+},{"./class/Game":150,"./class/StateManager":152,"./vue":154}],148:[function(require,module,exports){
 "use strict";
 
 var _classCallCheck2 = require("D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck");
@@ -2633,6 +2636,10 @@ var _createClass2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
+var _utils = require('../utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
 var _Hive = require('./Hive');
 
 var _Hive2 = _interopRequireDefault(_Hive);
@@ -2698,7 +2705,7 @@ var Game = function () {
     }, {
         key: 'addHive',
         value: function addHive() {
-            if (this.ressources.wood <= 200) {
+            if (this.ressources.wood < 200) {
                 console.log('Not enough wood');
                 return;
             }
@@ -2729,13 +2736,23 @@ var Game = function () {
         value: function loggingWood() {
             this.ressources['wood'] += parseInt(2);
         }
+    }, {
+        key: 'catchBees',
+        value: function catchBees() {
+            for (var p = 0; p < _utils2.default.getRndInRange(1, 2); p++) {
+                this.bees.princess.push(new _Bee2.default({ role: 'princess' }));
+            }
+            for (var d = 0; d < _utils2.default.getRndInRange(2, 4); d++) {
+                this.bees.drone.push(new _Bee2.default({ role: 'drone' }));
+            }
+        }
     }]);
     return Game;
 }();
 
 module.exports = Game;
 
-},{"./Bee":148,"./Hive":151,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":18,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":19}],151:[function(require,module,exports){
+},{"../utils":153,"./Bee":148,"./Hive":151,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":18,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":19}],151:[function(require,module,exports){
 'use strict';
 
 var _assign = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign');
@@ -3036,6 +3053,16 @@ var StateManager = function () {
 module.exports = StateManager;
 
 },{"D:\\www\\bees\\node_modules\\babel-runtime/core-js/json/stringify":1,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":18,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":19}],153:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+    getRndInRange: function getRndInRange(min, max) {
+        var rnd = Math.floor(Math.random() * (max - min + 1) + min);
+        return rnd;
+    }
+};
+
+},{}],154:[function(require,module,exports){
 (function (global){
 'use strict';
 

@@ -1,3 +1,4 @@
+import Utils from '../utils';
 import Hive from './Hive';
 import Bee from './Bee';
 
@@ -44,7 +45,7 @@ class Game {
         }
     }
     addHive() {
-        if (this.ressources.wood <= 200) {
+        if (this.ressources.wood < 200) {
             console.log('Not enough wood');
             return
         }
@@ -66,6 +67,14 @@ class Game {
     }
     loggingWood() {
         this.ressources['wood'] += parseInt(2);
+    }
+    catchBees() {
+        for (let p = 0; p < Utils.getRndInRange(1, 2); p++) {
+            this.bees.princess.push(new Bee({ role: 'princess' }));
+        }
+        for (let d = 0; d < Utils.getRndInRange(2, 4); d++) {
+            this.bees.drone.push(new Bee({ role: 'drone' }));
+        }
     }
 
 }
