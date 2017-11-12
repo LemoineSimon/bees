@@ -6,7 +6,6 @@ const state = new State();
 
 const game = new Game();
 
-// let farm = new Vue({
 Vue.component('hive', {
     template: "#hive",
     props: [
@@ -51,6 +50,23 @@ Vue.component('hive', {
     }
 });
 
+
+Vue.component('inventory',{
+    template: "#inventory",
+    data: function(){
+        return {
+            'inventory':{
+                'categories' : ['Bees','Ressources'],
+                'categoryActive' : 0,
+                'categoriesContent': [
+                    game.bees,
+                    game.ressources
+                ]
+            }
+        }
+    }
+});
+
 let app = new Vue({
     el: "#app",
     data: {
@@ -84,6 +100,26 @@ let app = new Vue({
         },
         catchBees: function() {
             game.catchBees();
+            this.refreshBees();
+        },
+        refreshBees: function(){
+            this.game.bees = Object.assign({}, this.game.bees, game.bees);
+        }
+    },
+    computed : {
+        totalPrincess : function(){
+            let total = 0;
+            for( let beeType in this.game.bees){
+                total += this.game.bees[beeType].princess;
+            }
+            return total;
+        },
+        totalDrone : function(){
+            let total = 0;
+            for( let beeType in this.game.bees){
+                total += this.game.bees[beeType].drone;
+            }
+            return total;
         }
     }
 });

@@ -1,16 +1,13 @@
 import Utils from '../utils';
 import Hive from './Hive';
-import Bee from './Bee';
+import Bee from '../factory/beeFactory';
 
 class Game {
     constructor() {
         this.start = false;
         this.money = 0;
         this.hives = [];
-        this.bees = {
-            'princess': [],
-            'drone': []
-        };
+        this.bees = {};
         this.ressources = {
             honey: [],
             wood: 0,
@@ -20,12 +17,12 @@ class Game {
     init() {
         this.start = true;
     }
-    _load(params) {
-        this.start = params.start;
-        this.money = params.money;
-        this.ressources = params.ressources;
-        this._loadHives(params.hives);
-        this._loadBees(params.bees);
+    _load(loadedSave) {
+        this.start = loadedSave.start;
+        this.money = loadedSave.money;
+        this.ressources = loadedSave.ressources;
+        this.bees = loadedSave.bees;
+        this._loadHives(loadedSave.hives);
     }
 
     _loadHives(hives) {
@@ -33,15 +30,6 @@ class Game {
             let tempHive = new Hive(i);
             tempHive._load(hives[i]);
             this.hives.push(tempHive);
-        }
-    }
-    _loadBees(bees) {
-        for (let role in bees) {
-            for (let i = 0; i < bees[role].length; i++) {
-                let beeParams = bees[role][i];
-                let bee = new Bee(beeParams);
-                this.bees[role].push(bee);
-            }
         }
     }
     addHive() {
@@ -69,14 +57,57 @@ class Game {
         this.ressources['wood'] += parseInt(2);
     }
     catchBees() {
+        let beeTypeStarter = ['meadows','forest'];
+        let bees = [];
         for (let p = 0; p < Utils.getRndInRange(1, 2); p++) {
-            this.bees.princess.push(new Bee({ role: 'princess' }));
+            let beeRndType = Utils.getRndInRange(0,1);
+            let beeParams = {
+                role : 'princess',
+                type : beeTypeStarter[beeRndType]
+            }
+            let bee = Bee.create(beeParams);
+            bees.push(bee);
         }
-        for (let d = 0; d < Utils.getRndInRange(2, 4); d++) {
-            this.bees.drone.push(new Bee({ role: 'drone' }));
+        for (let d = 0; d < Utils.getRndInRange(1, 3); d++) {
+            let beeRndType = Utils.getRndInRange(0,1);
+            let beeParams = {
+                role : 'drone',
+                type : beeTypeStarter[beeRndType]
+            }
+            let bee = Bee.create(beeParams);
+            bees.push(bee);
         }
+        this.addBees(bees);
     }
-
+    addBees(bees){
+        let self = this;
+        bees.forEach(function(bee){
+            self.addBee(bee);
+        });
+    }
+    addBee(bee){
+        if(this.bees[bee.type] == undefined){
+            this.addBeeType(bee);
+        }
+        this.bees[bee.type][bee.role] += 1;
+    }
+    addBeeType(bee){
+        let beesSave = Object.assign({},this.bees);
+        Object.defineProperty(
+            beesSave,
+            bee.type,
+            {
+                value : {
+                    'princess':0,
+                    'drone':0
+                },
+                writable : true,
+                enumerable : true,
+                configurable : true
+           }
+        );
+        Object.assign(this.bees,beesSave);
+    }
 }
 
 module.exports = Game;

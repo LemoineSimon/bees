@@ -1,4 +1,4 @@
-import Bee from './Bee';
+import Bee from '../factory/beeFactory';
 
 class Hive {
     constructor(id) {
@@ -45,7 +45,7 @@ class Hive {
         for (let role in bees) {
             for (let i = 0; i < bees[role].length; i++) {
                 let beeParams = bees[role][i];
-                let bee = new Bee(beeParams);
+                let bee = Bee.create(beeParams);
                 this.bees[role].fill(bee, i, i + 1);
             }
         }
@@ -57,7 +57,7 @@ class Hive {
                 if (beeParams == null) {
                     continue;
                 }
-                let bee = new Bee(beeParams);
+                let bee = Bee.create(beeParams);
                 this.nursery[beeRole].fill(bee, i, i + 1);
             }
         }
@@ -105,9 +105,7 @@ class Hive {
     run() {
         if (this.bees.queen.length == 0) {
             this.bees.drone.shift();
-            console.log(this.bees.princess);
             let queen = this.bees.princess[0];
-            console.log(queen);
             queen.swarming();
             this.bees.queen.push(queen);
             this.bees.princess.shift();
@@ -136,7 +134,7 @@ class Hive {
         if (role != "princess" && role != "drone") {
             return;
         }
-        this.bees[role].push(new Bee({ role: role }));
+        this.bees[role].push(Bee.create({ role: role, type: "forest" }));
     }
 
     isProductionEmpty() {
@@ -177,12 +175,12 @@ class Hive {
         }
     }
     generatePrincess() {
-        this.nursery.princess.push(new Bee({ role: "princess" }));
+        this.nursery.princess.push(Bee.create({ role: "princess", type: "forest" }));
     }
     generateDrone() {
         this.nursery.drone.fill(null);
         for (var i = 0; i < this.bees.queen[0].larveNumber; i++) {
-            this.nursery.drone.fill(new Bee({ role: "drone" }), i, i + 1);
+            this.nursery.drone.fill(Bee.create({ role: "drone",type: "forest" }), i, i + 1);
         }
     }
 }

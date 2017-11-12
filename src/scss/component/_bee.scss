@@ -3,19 +3,25 @@
     height: 40px;
 }
 
-.bee[data-beerole="princess"] {
-    background-image: url('../../img/src/body1.png'), url('../../img/src/princess.body2.png'), url('../../img/src/princess.outline.png');
-    animation: playBee 5s 2s steps(5) infinite;
-}
-
-.bee[data-beerole="queen"] {
-    background-image: url('../../img/src/body1.png'), url('../../img/src/queen.body2.png'), url('../../img/src/queen.outline.png');
-    animation: playBee 5s 2s steps(5) infinite;
-}
-
-.bee[data-beerole="drone"] {
-    background-image: url('../../img/src/body1.png'), url('../../img/src/drone.body2.png'), url('../../img/src/drone.outline.png');
-    animation: playBee 5s 3.5s steps(5) infinite;
+.bee{
+    &[data-beerole="princess"] {
+        background-image: url('../../img/src/body1.png'), url('../../img/src/princess.body2.png'), url('../../img/src/sprite-princess.outline.png');
+        animation: playBee 5s 2s steps(5) infinite;
+    }
+    &[data-beerole="queen"] {
+        background-image: url('../../img/src/body1.png'), url('../../img/src/queen.body2.png'), url('../../img/src/sprite-drone.outline.png');
+        animation: playBee 5s 2s steps(5) infinite;
+    }
+    &[data-beerole="drone"] {
+        background-image: url('../../img/src/body1.png'), url('../../img/src/drone.body2.png'), url('../../img/src/sprite-drone.outline.png');
+        animation: playBee 5s 3.5s steps(5) infinite;
+    }
+    @each $bee in $bees{
+        $i: index($bees, $bee)-1;
+        &[data-beetype=#{$bee}]{
+        background-position-x: $i*-40px; 
+        }
+    }
 }
 
 @keyframes playBee {

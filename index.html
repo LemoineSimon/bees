@@ -22,8 +22,8 @@
                     <b>Money :</b> {{ game.money }}
                 </div>
                 <div class="bar__item">
-                    <div><b>Princess :</b> {{ game.bees.princess.length }}</div>
-                    <div><b>Drones :</b> {{ game.bees.drone.length }}</div>
+                    <div><b>Princess :</b>{{ totalPrincess }}</div>
+                    <div><b>Drones :</b> {{ totalDrone }}</div>
                 </div>
                 <div class="bar__item">
                     <b>Hives :</b> {{ game.hives.length }}
@@ -52,6 +52,9 @@
             <div id="farm" :hives="game.hives">
                 <hive v-for="(hive, index) in game.hives" :hive="hive" :index="index" :key="hive.id"></hive>
             </div>
+            <div>
+                <inventory></inventory>
+            </div>
         </div>
     </div>
     <template id="hive">
@@ -61,19 +64,19 @@
             <div class="hive__slot">
                     <div class="hive__starter">
                         <div class="slot">
-                            <div v-if="hive.bees.queen.length > 0" :data-beerole="hive.bees.queen[0].role" class="bee"></div>
-                            <div v-else-if="hive.bees.princess.length > 0" :data-beerole="hive.bees.princess[0].role" class="bee"></div>
+                            <div v-if="hive.bees.queen.length > 0" :data-beerole="hive.bees.queen[0].role" :data-beetype="hive.bees.queen[0].type" class="bee"></div>
+                            <div v-else-if="hive.bees.princess.length > 0" :data-beerole="hive.bees.princess[0].role" :data-beetype="hive.bees.princess[0].type" class="bee"></div>
                         </div>
                         <div class="slot">
-                            <div v-if="hive.bees.drone.length > 0" :data-beerole="hive.bees.drone[0].role" class="bee"></div>
+                            <div v-if="hive.bees.drone.length > 0" :data-beerole="hive.bees.drone[0].role" :data-beetype="hive.bees.drone[0].type" class="bee"></div>
                         </div>
                     </div>
                     <div class="hive__production">
                         <div class="slot">
-                            <div v-if="hive.nursery.princess.length > 0" class="bee" v-bind:class="[hive.nursery.princess[0].type]" :data-beerole="hive.nursery.princess[0].role" @click="collectPrincess"></div>
+                            <div v-if="hive.nursery.princess.length > 0" class="bee" v-bind:class="[hive.nursery.princess[0].type]" :data-beerole="hive.nursery.princess[0].role" :data-beetype="hive.nursery.princess[0].type" @click="collectPrincess"></div>
                         </div>
                         <div v-for="(drone,droneIndex) in hive.nursery.drone" class="slot">
-                            <div v-if="drone" class="bee" v-bind:class="drone.type" :data-beerole="drone.role" @click="collectDrone(droneIndex)"></div>
+                            <div v-if="drone" class="bee" v-bind:class="drone.type" :data-beerole="drone.role" :data-beetype="drone.type" @click="collectDrone(droneIndex)"></div>
                         </div>
                         <div v-for="(loot,lootIndex) in hive.loots" class="slot">
                             <div v-if="loot" class="loot" v-bind:class="loot.name" :data-loottype="loot.type" @click="collectLoot(lootIndex)"></div>
@@ -89,6 +92,24 @@
                         <button class="hive__button" type="button" @click="start">Start Hive</button>
                     </div>
                 </div>
+        </div>
+    </template>
+    <template id="inventory">
+        <div class="inventory">
+            <nav class="inventory__navigation">
+                <ul>
+                    <li v-for="(category,index) in inventory.categories" :index="index">
+                        <a href="#" title="category">{{category}}</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="inventory__content">
+                <div class="inventory__part-container">
+                    <div v-for="(categoryContent,index) in inventory.categoriesContent" :index="index" class="inventory__part">
+                        <div v-for="content in categoryContent"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </template>
     <script src="dist/js/app.js "></script>

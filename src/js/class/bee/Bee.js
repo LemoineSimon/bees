@@ -1,10 +1,10 @@
-import Comb from './Comb';
+import Comb from '../Comb';
 
 class Bee {
     constructor(params) {
 
         this.role = params.role;
-        this.type = "default";
+        this.type = params.type;
 
         // Genetics - Allele
         this.setGenetics();
