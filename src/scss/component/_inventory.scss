@@ -1,0 +1,43 @@
+.inventory{
+	background-color: #EEE;
+	border: .1rem solid #ababab;
+	max-width: 480px;
+    margin: 0 auto;
+	&__navigation{
+		background: #dadada;
+    	border-bottom: .1rem solid #ababab;
+		ul{
+			margin: 0;
+			padding: 0;
+		}
+		li{
+			display: inline-block;
+			vertical-align: bottom;
+			background-color: #CCC;
+			padding: 1rem;
+			text-align: center;
+			border-left: .1rem solid #AAA;
+			border-right: .1rem solid #AAA;
+			a{
+				color: #333;
+				text-decoration: none;
+			}
+		}
+	}
+	&__content{
+		padding: 1rem;
+	}
+	&__part{
+		display: flex;
+		flex-wrap: wrap;
+		& > div{
+			padding: .2rem;
+			margin: 0 .2rem;
+			& > div{
+				    background-color: #fff;
+				    border: .3rem solid #b7b7b7;
+				    margin-bottom: .5rem;
+			}
+		}
+	}
+}

@@ -98,15 +98,25 @@
         <div class="inventory">
             <nav class="inventory__navigation">
                 <ul>
-                    <li v-for="(category,index) in inventory.categories" :index="index">
-                        <a href="#" title="category">{{category}}</a>
+                    <li v-for="(partNavigation,indexNavigation) in inventory.parts" :index="indexNavigation" @click="inventory.currentCategory = indexNavigation">
+                        <a href="#" title="partNavigation.name">{{partNavigation.name}}</a>
                     </li>
                 </ul>
             </nav>
             <div class="inventory__content">
                 <div class="inventory__part-container">
-                    <div v-for="(categoryContent,index) in inventory.categoriesContent" :index="index" class="inventory__part">
-                        <div v-for="content in categoryContent"></div>
+                    <div  v-for="(part,index) in inventory.parts" :index="index" class="inventory__part" v-show="inventory.currentCategory == index">
+                            <div v-for="(item,value) in part.data"> 
+                                 <div v-if="part.name=='Bees'">
+                                    <div v-for="(qty, role) in item">
+                                        <div  class="bee" :data-beerole="role" :data-beeType="value"></div>
+                                        <span class="bee__quantity">x{{qty}}</span>
+                                    </div> 
+                                </div>
+                                <div v-if="part.name=='Ressources'">
+                                    <div :class="value"></div>
+                                </div>
+                            </div>
                     </div>
                 </div>
             </div>

@@ -56,12 +56,17 @@ Vue.component('inventory',{
     data: function(){
         return {
             'inventory':{
-                'categories' : ['Bees','Ressources'],
-                'categoryActive' : 0,
-                'categoriesContent': [
-                    game.bees,
-                    game.ressources
-                ]
+                'parts':[
+                    {
+                        name: 'Bees',
+                        data: game.bees
+                    },
+                    {
+                        name: 'Ressources',
+                        data: game.ressources
+                    }
+                ],
+                'currentCategory' : 0
             }
         }
     }

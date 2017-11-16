@@ -2619,9 +2619,14 @@ _vue2.default.component('inventory', {
     data: function data() {
         return {
             'inventory': {
-                'categories': ['Bees', 'Ressources'],
-                'categoryActive': 0,
-                'categoriesContent': [game.bees, game.ressources]
+                'parts': [{
+                    name: 'Bees',
+                    data: game.bees
+                }, {
+                    name: 'Ressources',
+                    data: game.ressources
+                }],
+                'currentCategory': 0
             }
         };
     }
