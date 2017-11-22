@@ -2718,7 +2718,7 @@ var app = new _vue2.default({
         },
         catchBees: function catchBees() {
             this.game.catchBees();
-            //this.refreshBees();
+            this.refreshBees();
         },
         refreshBees: function refreshBees() {
             this.game.bees = (0, _assign2.default)({}, this.game.bees, game.bees);

@@ -156,7 +156,7 @@ let app = new Vue({
         },
         catchBees: function() {
             this.game.catchBees();
-            //this.refreshBees();
+            this.refreshBees();
         },
         refreshBees: function(){
             this.game.bees = Object.assign({}, this.game.bees, game.bees);
