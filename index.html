@@ -16,45 +16,48 @@
                 <button type="button" @click="continueGame">Continue game</button>
             </div>
         </div>
-        <div id="game" v-if="game.start">
-            <div id="statusBar" class="bar bar--status">
-                <div class="bar__item">
-                    <b>Money :</b> {{ game.money }}
+        <div id="game" v-if="game.start" class="flex">
+            <div style="width:60%;">
+                <div id="statusBar" class="bar bar--status">
+                    <div class="bar__item">
+                        <b>Money :</b> {{ game.money }}
+                    </div>
+                    <div class="bar__item">
+                        <div><b>Princess :</b>{{ totalPrincess }}</div>
+                        <div><b>Drones :</b> {{ totalDrone }}</div>
+                    </div>
+                    <div class="bar__item">
+                        <b>Hives :</b> {{ game.hives.length }}
+                    </div>
+                    <div class="bar__item">
+                        <b>Combs :</b> {{ game.ressources.comb.length }}
+                    </div>
+                    <div class="bar__item">
+                        <b>Wood :</b> {{ game.ressources.wood }}
+                    </div>
+                    <div class="bar__item">
+                        <button type="button" @click="saveGame">Save</button>
+                    </div>
                 </div>
-                <div class="bar__item">
-                    <div><b>Princess :</b>{{ totalPrincess }}</div>
-                    <div><b>Drones :</b> {{ totalDrone }}</div>
+                <div class="bar bar--action">
+                    <div class="bar__item">
+                        <button type="button" @click="loggingWood">Logging wood</button>
+                    </div>
+                    <div class="bar__item">
+                        <button type="button" @click="addHive">Add hive</button>
+                    </div>
+                    <div class="bar__item">
+                        <button type="button" @click="catchBees">Catch some bees</button>
+                    </div>
                 </div>
-                <div class="bar__item">
-                    <b>Hives :</b> {{ game.hives.length }}
-                </div>
-                <div class="bar__item">
-                    <b>Combs :</b> {{ game.ressources.comb.length }}
-                </div>
-                <div class="bar__item">
-                    <b>Wood :</b> {{ game.ressources.wood }}
-                </div>
-                <div class="bar__item">
-                    <button type="button" @click="saveGame">Save</button>
+                <div id="farm" :hives="game.hives">
+                    <hive v-for="(hive, index) in game.hives" :hive="hive" :index="index" :key="hive.id"></hive>
                 </div>
             </div>
-            <div class="bar bar--action">
-                <div class="bar__item">
-                    <button type="button" @click="loggingWood">Logging wood</button>
-                </div>
-                <div class="bar__item">
-                    <button type="button" @click="addHive">Add hive</button>
-                </div>
-                <div class="bar__item">
-                    <button type="button" @click="catchBees">Catch some bees</button>
-                </div>
-            </div>
-            <div id="farm" :hives="game.hives">
-                <hive v-for="(hive, index) in game.hives" :hive="hive" :index="index" :key="hive.id"></hive>
-            </div>
-            <div>
+            <div style="width:40%;">
                 <inventory></inventory>
             </div>
+            <beemodal></beemodal>
         </div>
     </div>
     <template id="hive">
@@ -63,11 +66,11 @@
             <h3 class="hive__name">#{{hive.id}}</h3>
             <div class="hive__slot">
                     <div class="hive__starter">
-                        <div class="slot">
+                        <div class="slot" @click="selectBee('princess')">
                             <div v-if="hive.bees.queen.length > 0" :data-beerole="hive.bees.queen[0].role" :data-beetype="hive.bees.queen[0].type" class="bee"></div>
                             <div v-else-if="hive.bees.princess.length > 0" :data-beerole="hive.bees.princess[0].role" :data-beetype="hive.bees.princess[0].type" class="bee"></div>
                         </div>
-                        <div class="slot">
+                        <div class="slot" @click="selectBee('drone')">
                             <div v-if="hive.bees.drone.length > 0" :data-beerole="hive.bees.drone[0].role" :data-beetype="hive.bees.drone[0].type" class="bee"></div>
                         </div>
                     </div>
@@ -84,10 +87,10 @@
                     </div>
                 </div>
                 <div>
-                    <div>
+                    <!-- <div>
                         <button class="hive__button" type="button" @click="addPrincess">Add Princess</button>
                         <button class="hive__button" type="button" @click="addDrone">Add Drone</button>
-                    </div>
+                    </div> -->
                     <div>
                         <button class="hive__button" type="button" @click="start">Start Hive</button>
                     </div>
@@ -118,6 +121,16 @@
                                 </div>
                             </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="beemodal">
+        <div class="bee-modal flex" v-if="modalShown" :style="{top:position.y+'px',left:position.x+'px'}">
+            <div v-for="(beeFam,beeType) in bees">
+                 <div v-for="(qty,role) in beeFam" v-if="role == beeRole" @click="selectBee(beeType,role)" class="bg--white ps" style="border: .2rem solid #CCC">
+                    <div  class="bee" :data-beerole="role" :data-beeType="beeType" @click="modalShown=false"></div>
+                    <span class="bee__quantity">x{{qty}}</span>
                 </div>
             </div>
         </div>

@@ -2565,21 +2565,41 @@ var _StateManager = require('./class/StateManager');
 
 var _StateManager2 = _interopRequireDefault(_StateManager);
 
+var _Crafter = require('./class/Crafter');
+
+var _Crafter2 = _interopRequireDefault(_Crafter);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var state = new _StateManager2.default();
 
 var game = new _Game2.default();
 
+var crafter = new _Crafter2.default();
+
 _vue2.default.component('hive', {
     template: "#hive",
     props: ['hive'],
     methods: {
-        addPrincess: function addPrincess() {
-            this.hive.addBee("princess");
+        selectBee: function selectBee(beeRole) {
+            console.log('selectBee');
+            app.$emit('openModal', {
+                'hive': this,
+                'beeRole': beeRole
+            });
         },
-        addDrone: function addDrone() {
-            this.hive.addBee("drone");
+        addBee: function addBee(bee) {
+            var result = this.hive.addBee(bee);
+            if (result.type == 'added') {
+                console.log('success');
+                app.game.bees[bee.type][bee.role]--;
+            } else if (result.type == 'changed') {
+                app.game.bees[bee.type][bee.role]--;
+                app.game.bees[result.oldBee.type][result.oldBee.role]++;
+                console.log(result.text);
+            } else {
+                console.log(result.text);
+            }
         },
         start: function start() {
             this.hive.start();
@@ -2632,6 +2652,39 @@ _vue2.default.component('inventory', {
     }
 });
 
+_vue2.default.component('beemodal', {
+    template: "#beemodal",
+    data: function data() {
+        return {
+            'bees': game.bees,
+            'beeRole': 'princess',
+            'modalShown': false,
+            'referalHive': null,
+            'position': {
+                x: 0,
+                y: 0
+            }
+        };
+    },
+    methods: {
+        selectBee: function selectBee(beeType, beeRole) {
+            this.referalHive.addBee({ 'type': beeType, 'role': beeRole });
+        }
+    },
+    created: function created() {
+        var self = this;
+        this.$parent.$on('openModal', function (data) {
+
+            self.beeRole = data.beeRole;
+            self.referalHive = data.hive;
+            self.modalShown = true;
+            var slotIndex = data.beeRole == 'princess' ? 0 : 1;
+            self.position.x = self.referalHive.$el.querySelectorAll('.hive__starter .slot')[slotIndex].getBoundingClientRect().left + 30;
+            self.position.y = self.referalHive.$el.querySelectorAll('.hive__starter .slot')[slotIndex].getBoundingClientRect().top + 10;
+        });
+    }
+});
+
 var app = new _vue2.default({
     el: "#app",
     data: {
@@ -2640,32 +2693,32 @@ var app = new _vue2.default({
     },
     methods: {
         newGame: function newGame() {
-            if (state.saveExist()) {
+            if (this.state.saveExist()) {
                 console.log('Are you sure');
                 return;
             }
-            game.init();
+            this.game.init();
         },
         continueGame: function continueGame() {
-            if (!state.saveExist()) {
+            if (!this.state.saveExist()) {
                 console.log('save not exist');
                 return;
             }
-            var load = state.load();
-            game._load(load);
+            var load = this.state.load();
+            this.game._load(load);
         },
         saveGame: function saveGame() {
-            state.save(game);
+            this.state.save(this.game);
         },
         addHive: function addHive() {
-            game.addHive();
+            this.game.addHive();
         },
         loggingWood: function loggingWood() {
-            game.loggingWood();
+            this.game.loggingWood();
         },
         catchBees: function catchBees() {
-            game.catchBees();
-            this.refreshBees();
+            this.game.catchBees();
+            //this.refreshBees();
         },
         refreshBees: function refreshBees() {
             this.game.bees = (0, _assign2.default)({}, this.game.bees, game.bees);
@@ -2689,7 +2742,7 @@ var app = new _vue2.default({
     }
 });
 
-},{"./class/Game":158,"./class/StateManager":160,"./vue":166,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2}],157:[function(require,module,exports){
+},{"./class/Crafter":158,"./class/Game":159,"./class/StateManager":162,"./vue":168,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2}],157:[function(require,module,exports){
 'use strict';
 
 var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
@@ -2709,6 +2762,25 @@ var Comb = function Comb() {
 module.exports = Comb;
 
 },{"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20}],158:[function(require,module,exports){
+'use strict';
+
+var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _Recipes = require('./Recipes');
+
+var _Recipes2 = _interopRequireDefault(_Recipes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Crafter = function Crafter() {
+	(0, _classCallCheck3.default)(this, Crafter);
+};
+
+module.exports = Crafter;
+
+},{"./Recipes":161,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20}],159:[function(require,module,exports){
 'use strict';
 
 var _defineProperty = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/define-property');
@@ -2794,13 +2866,13 @@ var Game = function () {
         key: 'collectPrincess',
         value: function collectPrincess(hive) {
             var princess = hive.nursery.princess.splice(0, 1)[0];
-            this.bees.princess.push(princess);
+            this.addBee(princess);
         }
     }, {
         key: 'collectDrone',
         value: function collectDrone(hive, droneIndex) {
             var drone = hive.nursery.drone.splice(droneIndex, 1, null)[0];
-            this.bees.drone.push(drone);
+            this.addBee(drone);
         }
     }, {
         key: 'collectLoot',
@@ -2875,7 +2947,7 @@ var Game = function () {
 
 module.exports = Game;
 
-},{"../factory/beeFactory":164,"../utils":165,"./Hive":159,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/define-property":5,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],159:[function(require,module,exports){
+},{"../factory/beeFactory":166,"../utils":167,"./Hive":160,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/define-property":5,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],160:[function(require,module,exports){
 'use strict';
 
 var _assign = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign');
@@ -2999,9 +3071,11 @@ var Hive = function () {
         key: 'start',
         value: function start() {
             if ((this.bees.princess.length >= 0 && this.bees.drone.length == 0 || this.bees.princess.length == 0 && this.bees.drone.length > 0) && this.bees.queen.length == 0) {
+                console.log("0");
                 return;
             }
             if (this.states[this.currentState].type != "waiting") {
+                console.log("1");
                 return;
             }
             this.currentState++;
@@ -3046,11 +3120,27 @@ var Hive = function () {
         }
     }, {
         key: 'addBee',
-        value: function addBee(role) {
-            if (role != "princess" && role != "drone") {
-                return;
+        value: function addBee(bee) {
+            // Need one bee per role
+            var result = {
+                type: 'denied',
+                text: 'Same type of bee already in this hive'
+            };
+            if (this.bees[bee.role].length > 0) {
+                if (this.bees[bee.role][0].type != bee.type) {
+                    var oldBee = this.bees[bee.role][0];
+                    this.bees[bee.role].shift();
+                    this.bees[bee.role].push(_beeFactory2.default.create({ role: bee.role, type: bee.type }));
+                    result.type = 'changed';
+                    result.text = 'You successfully changed your bee in this hive';
+                    result.oldBee = oldBee;
+                }
+            } else {
+                this.bees[bee.role].push(_beeFactory2.default.create({ role: bee.role, type: bee.type }));
+                result.type = 'added';
+                result.text = 'You succesfully added your bee in this hive';
             }
-            this.bees[role].push(_beeFactory2.default.create({ role: role, type: "forest" }));
+            return result;
         }
     }, {
         key: 'isProductionEmpty',
@@ -3115,7 +3205,21 @@ var Hive = function () {
 
 module.exports = Hive;
 
-},{"../factory/beeFactory":164,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],160:[function(require,module,exports){
+},{"../factory/beeFactory":166,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],161:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+	'hive': {
+		'wood': 200
+	},
+
+	'super-hive': {
+		'wood': 400,
+		'honey': 50
+	}
+};
+
+},{}],162:[function(require,module,exports){
 'use strict';
 
 var _stringify = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/json/stringify');
@@ -3173,7 +3277,7 @@ var StateManager = function () {
 
 module.exports = StateManager;
 
-},{"D:\\www\\bees\\node_modules\\babel-runtime/core-js/json/stringify":1,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],161:[function(require,module,exports){
+},{"D:\\www\\bees\\node_modules\\babel-runtime/core-js/json/stringify":1,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],163:[function(require,module,exports){
 "use strict";
 
 var _classCallCheck2 = require("D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck");
@@ -3238,7 +3342,7 @@ var Bee = function () {
 
 module.exports = Bee;
 
-},{"../Comb":157,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],162:[function(require,module,exports){
+},{"../Comb":157,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],164:[function(require,module,exports){
 'use strict';
 
 var _getPrototypeOf = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of');
@@ -3277,7 +3381,7 @@ var Forest = function (_Bee) {
 
 module.exports = Forest;
 
-},{"./Bee":161,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":22,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":23}],163:[function(require,module,exports){
+},{"./Bee":163,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":22,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":23}],165:[function(require,module,exports){
 'use strict';
 
 var _getPrototypeOf = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of');
@@ -3316,7 +3420,7 @@ var Meadows = function (_Bee) {
 
 module.exports = Meadows;
 
-},{"./Bee":161,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":22,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":23}],164:[function(require,module,exports){
+},{"./Bee":163,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":22,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":23}],166:[function(require,module,exports){
 'use strict';
 
 var _Bee = require('../class/bee/Bee');
@@ -3344,7 +3448,7 @@ module.exports = {
 	}
 };
 
-},{"../class/bee/Bee":161,"../class/bee/Forest":162,"../class/bee/Meadows":163}],165:[function(require,module,exports){
+},{"../class/bee/Bee":163,"../class/bee/Forest":164,"../class/bee/Meadows":165}],167:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -3354,7 +3458,7 @@ module.exports = {
     }
 };
 
-},{}],166:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
 (function (global){
 'use strict';
 

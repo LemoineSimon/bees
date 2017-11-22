@@ -2,6 +2,9 @@
 @import '../base/reset';
 @import '../base/typography';
 @import '../base/base';
+@import '../base/spacing';
+@import '../base/background';
+@import '../base/utilities';
 @import '../component/button';
 @import '../component/title-screen';
 @import '../component/bar';
@@ -10,3 +13,4 @@
 @import '../component/bee';
 @import '../component/comb';
 @import '../component/inventory';
+@import '../component/bee-modal';

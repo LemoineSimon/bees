@@ -92,9 +92,11 @@ class Hive {
     }
     start() {
         if (((this.bees.princess.length >= 0 && this.bees.drone.length == 0) || (this.bees.princess.length == 0 && this.bees.drone.length > 0)) && this.bees.queen.length == 0) {
+            console.log("0");
             return;
         }
         if (this.states[this.currentState].type != "waiting") {
+            console.log("1");
             return;
         }
         this.currentState++;
@@ -130,11 +132,27 @@ class Hive {
         this.currentTime = 0;
     }
 
-    addBee(role) {
-        if (role != "princess" && role != "drone") {
-            return;
+    addBee(bee) {
+        // Need one bee per role
+        let result = {
+            type: 'denied',
+            text: 'Same type of bee already in this hive'
         }
-        this.bees[role].push(Bee.create({ role: role, type: "forest" }));
+        if(this.bees[bee.role].length > 0){
+            if(this.bees[bee.role][0].type != bee.type){
+                let oldBee = this.bees[bee.role][0];
+                this.bees[bee.role].shift();
+                this.bees[bee.role].push(Bee.create({ role: bee.role, type: bee.type }));
+                result.type = 'changed';
+                result.text = 'You successfully changed your bee in this hive';
+                result.oldBee = oldBee;
+            }
+        }else{
+            this.bees[bee.role].push(Bee.create({ role: bee.role, type: bee.type }));
+            result.type = 'added';
+            result.text = 'You succesfully added your bee in this hive';
+        }
+        return result;
     }
 
     isProductionEmpty() {

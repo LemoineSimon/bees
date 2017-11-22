@@ -1,0 +1,16 @@
+.bee-modal{
+	position: absolute;
+	top:50%;
+	left:50%;
+	box-shadow: 0 0 .3rem rgba(0,0,0,.3);
+	background-color: #DDD;
+	border: .2rem solid #CCC;
+	padding: .5rem;
+	z-index: 100;
+	.bee{
+		cursor: pointer;
+		&:hover{
+			filter: drop-shadow(0 0 3px #d8d209);
+		}
+	}
+}

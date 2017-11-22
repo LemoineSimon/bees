@@ -2,6 +2,7 @@ import Utils from '../utils';
 import Hive from './Hive';
 import Bee from '../factory/beeFactory';
 
+
 class Game {
     constructor() {
         this.start = false;
@@ -43,11 +44,11 @@ class Game {
     }
     collectPrincess(hive) {
         let princess = hive.nursery.princess.splice(0, 1)[0];
-        this.bees.princess.push(princess);
+        this.addBee(princess);
     }
     collectDrone(hive, droneIndex) {
         let drone = hive.nursery.drone.splice(droneIndex, 1, null)[0];
-        this.bees.drone.push(drone);
+        this.addBee(drone);
     }
     collectLoot(hive, lootIndex) {
         let loot = hive.loots.splice(lootIndex, 1, null)[0];
