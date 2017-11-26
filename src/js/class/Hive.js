@@ -106,11 +106,12 @@ class Hive {
     }
     run() {
         if (this.bees.queen.length == 0) {
-            this.bees.drone.shift();
             let queen = this.bees.princess[0];
             queen.swarming();
+            queen.droneType = this.bees.drone[0].type;
             this.bees.queen.push(queen);
             this.bees.princess.shift();
+            this.bees.drone.shift();
         }
         this.currentProgress = 0;
         this.currentTime = 0;
@@ -193,12 +194,14 @@ class Hive {
         }
     }
     generatePrincess() {
-        this.nursery.princess.push(Bee.create({ role: "princess", type: "forest" }));
+        let beeEvolve = Bee.getEvolve(this.bees.queen[0].type, this.bees.queen[0].droneType);
+        this.nursery.princess.push(Bee.create({ role: "princess", type: beeEvolve }));
     }
     generateDrone() {
         this.nursery.drone.fill(null);
         for (var i = 0; i < this.bees.queen[0].larveNumber; i++) {
-            this.nursery.drone.fill(Bee.create({ role: "drone",type: "forest" }), i, i + 1);
+            let beeEvolve = Bee.getEvolve(this.bees.queen[0].type, this.bees.queen[0].droneType);
+            this.nursery.drone.fill(Bee.create({ role: "drone",type: beeEvolve }), i, i + 1);
         }
     }
 }

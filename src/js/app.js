@@ -106,6 +106,7 @@ Vue.component('beemodal',{
     },
     methods: {
         selectBee: function(beeType, beeRole){
+            this.modalShown = false;
             this.referalHive.addBee({'type':beeType, 'role':beeRole});
         }
     },

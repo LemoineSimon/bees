@@ -87,10 +87,6 @@
                     </div>
                 </div>
                 <div>
-                    <!-- <div>
-                        <button class="hive__button" type="button" @click="addPrincess">Add Princess</button>
-                        <button class="hive__button" type="button" @click="addDrone">Add Drone</button>
-                    </div> -->
                     <div>
                         <button class="hive__button" type="button" @click="start">Start Hive</button>
                     </div>
@@ -127,9 +123,10 @@
     </template>
     <template id="beemodal">
         <div class="bee-modal flex" v-if="modalShown" :style="{top:position.y+'px',left:position.x+'px'}">
+            <button class="bee-modal__close" @click="modalShown=false">X</button>
             <div v-for="(beeFam,beeType) in bees">
-                 <div v-for="(qty,role) in beeFam" v-if="role == beeRole" @click="selectBee(beeType,role)" class="bg--white ps" style="border: .2rem solid #CCC">
-                    <div  class="bee" :data-beerole="role" :data-beeType="beeType" @click="modalShown=false"></div>
+                 <div v-for="(qty,role) in beeFam" v-if="role == beeRole && qty > 0" @click="selectBee(beeType,role)" class="bg--white ps" style="border: .2rem solid #CCC">
+                    <div  class="bee" :data-beerole="role" :data-beeType="beeType"></div>
                     <span class="bee__quantity">x{{qty}}</span>
                 </div>
             </div>

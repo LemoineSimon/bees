@@ -2,6 +2,7 @@ import Utils from '../utils';
 import Hive from './Hive';
 import Bee from '../factory/beeFactory';
 
+const HIVE_PRICE = 40;
 
 class Game {
     constructor() {
@@ -34,13 +35,13 @@ class Game {
         }
     }
     addHive() {
-        if (this.ressources.wood < 200) {
+        if (this.ressources.wood < HIVE_PRICE) {
             console.log('Not enough wood');
             return
         }
         let hive = new Hive(this.hives.length);
         this.hives.push(hive);
-        this.ressources.wood -= 200;
+        this.ressources.wood -= HIVE_PRICE;
     }
     collectPrincess(hive) {
         let princess = hive.nursery.princess.splice(0, 1)[0];

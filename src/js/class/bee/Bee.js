@@ -5,7 +5,7 @@ class Bee {
 
         this.role = params.role;
         this.type = params.type;
-
+        this.droneType = '';
         // Genetics - Allele
         this.setGenetics();
     }

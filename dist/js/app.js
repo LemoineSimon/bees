@@ -2668,6 +2668,7 @@ _vue2.default.component('beemodal', {
     },
     methods: {
         selectBee: function selectBee(beeType, beeRole) {
+            this.modalShown = false;
             this.referalHive.addBee({ 'type': beeType, 'role': beeRole });
         }
     },
@@ -2742,7 +2743,7 @@ var app = new _vue2.default({
     }
 });
 
-},{"./class/Crafter":158,"./class/Game":159,"./class/StateManager":162,"./vue":168,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2}],157:[function(require,module,exports){
+},{"./class/Crafter":158,"./class/Game":159,"./class/StateManager":162,"./vue":170,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2}],157:[function(require,module,exports){
 'use strict';
 
 var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
@@ -2813,6 +2814,8 @@ var _beeFactory2 = _interopRequireDefault(_beeFactory);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var HIVE_PRICE = 40;
+
 var Game = function () {
     function Game() {
         (0, _classCallCheck3.default)(this, Game);
@@ -2854,13 +2857,13 @@ var Game = function () {
     }, {
         key: 'addHive',
         value: function addHive() {
-            if (this.ressources.wood < 200) {
+            if (this.ressources.wood < HIVE_PRICE) {
                 console.log('Not enough wood');
                 return;
             }
             var hive = new _Hive2.default(this.hives.length);
             this.hives.push(hive);
-            this.ressources.wood -= 200;
+            this.ressources.wood -= HIVE_PRICE;
         }
     }, {
         key: 'collectPrincess',
@@ -2947,7 +2950,7 @@ var Game = function () {
 
 module.exports = Game;
 
-},{"../factory/beeFactory":166,"../utils":167,"./Hive":160,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/define-property":5,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],160:[function(require,module,exports){
+},{"../factory/beeFactory":168,"../utils":169,"./Hive":160,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/define-property":5,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],160:[function(require,module,exports){
 'use strict';
 
 var _assign = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign');
@@ -3087,11 +3090,12 @@ var Hive = function () {
         key: 'run',
         value: function run() {
             if (this.bees.queen.length == 0) {
-                this.bees.drone.shift();
                 var queen = this.bees.princess[0];
                 queen.swarming();
+                queen.droneType = this.bees.drone[0].type;
                 this.bees.queen.push(queen);
                 this.bees.princess.shift();
+                this.bees.drone.shift();
             }
             this.currentProgress = 0;
             this.currentTime = 0;
@@ -3189,14 +3193,16 @@ var Hive = function () {
     }, {
         key: 'generatePrincess',
         value: function generatePrincess() {
-            this.nursery.princess.push(_beeFactory2.default.create({ role: "princess", type: "forest" }));
+            var beeEvolve = _beeFactory2.default.getEvolve(this.bees.queen[0].type, this.bees.queen[0].droneType);
+            this.nursery.princess.push(_beeFactory2.default.create({ role: "princess", type: beeEvolve }));
         }
     }, {
         key: 'generateDrone',
         value: function generateDrone() {
             this.nursery.drone.fill(null);
             for (var i = 0; i < this.bees.queen[0].larveNumber; i++) {
-                this.nursery.drone.fill(_beeFactory2.default.create({ role: "drone", type: "forest" }), i, i + 1);
+                var beeEvolve = _beeFactory2.default.getEvolve(this.bees.queen[0].type, this.bees.queen[0].droneType);
+                this.nursery.drone.fill(_beeFactory2.default.create({ role: "drone", type: beeEvolve }), i, i + 1);
             }
         }
     }]);
@@ -3205,7 +3211,7 @@ var Hive = function () {
 
 module.exports = Hive;
 
-},{"../factory/beeFactory":166,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],161:[function(require,module,exports){
+},{"../factory/beeFactory":168,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/assign":2,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],161:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -3278,17 +3284,17 @@ var StateManager = function () {
 module.exports = StateManager;
 
 },{"D:\\www\\bees\\node_modules\\babel-runtime/core-js/json/stringify":1,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],163:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var _classCallCheck2 = require("D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck");
+var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = require("D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass");
+var _createClass2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _Comb = require("../Comb");
+var _Comb = require('../Comb');
 
 var _Comb2 = _interopRequireDefault(_Comb);
 
@@ -3301,13 +3307,13 @@ var Bee = function () {
 
         this.role = params.role;
         this.type = params.type;
-
+        this.droneType = '';
         // Genetics - Allele
         this.setGenetics();
     }
 
     (0, _createClass3.default)(Bee, [{
-        key: "setGenetics",
+        key: 'setGenetics',
         value: function setGenetics() {
             if (this.role == "princess") {
                 this.setPrincessGene();
@@ -3316,7 +3322,7 @@ var Bee = function () {
             }
         }
     }, {
-        key: "setPrincessGene",
+        key: 'setPrincessGene',
         value: function setPrincessGene() {
             this.life = 2;
             this.larveNumber = 2;
@@ -3324,12 +3330,12 @@ var Bee = function () {
             this.comb = new _Comb2.default();
         }
     }, {
-        key: "setDroneGene",
+        key: 'setDroneGene',
         value: function setDroneGene() {
             this.life = 2;
         }
     }, {
-        key: "swarming",
+        key: 'swarming',
         value: function swarming() {
             if (this.role != "princess") {
                 return;
@@ -3343,6 +3349,45 @@ var Bee = function () {
 module.exports = Bee;
 
 },{"../Comb":157,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":21}],164:[function(require,module,exports){
+'use strict';
+
+var _getPrototypeOf = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _possibleConstructorReturn2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _Bee2 = require('./Bee');
+
+var _Bee3 = _interopRequireDefault(_Bee2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Common = function (_Bee) {
+	(0, _inherits3.default)(Common, _Bee);
+
+	function Common(params) {
+		(0, _classCallCheck3.default)(this, Common);
+		return (0, _possibleConstructorReturn3.default)(this, (Common.__proto__ || (0, _getPrototypeOf2.default)(Common)).call(this, params));
+		//this.type = params.type;
+	}
+
+	return Common;
+}(_Bee3.default);
+
+module.exports = Common;
+
+},{"./Bee":163,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":22,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":23}],165:[function(require,module,exports){
 'use strict';
 
 var _getPrototypeOf = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of');
@@ -3381,7 +3426,20 @@ var Forest = function (_Bee) {
 
 module.exports = Forest;
 
-},{"./Bee":163,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":22,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":23}],165:[function(require,module,exports){
+},{"./Bee":163,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":22,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":23}],166:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+	"forest": {
+		"meadows": {
+			"forest": 40,
+			"meadows": 40,
+			"common": 30
+		}
+	}
+};
+
+},{}],167:[function(require,module,exports){
 'use strict';
 
 var _getPrototypeOf = require('D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of');
@@ -3420,8 +3478,16 @@ var Meadows = function (_Bee) {
 
 module.exports = Meadows;
 
-},{"./Bee":163,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":22,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":23}],166:[function(require,module,exports){
+},{"./Bee":163,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":20,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":22,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":23}],168:[function(require,module,exports){
 'use strict';
+
+var _utils = require('../utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
+var _Genetic = require('../class/bee/Genetic');
+
+var _Genetic2 = _interopRequireDefault(_Genetic);
 
 var _Bee = require('../class/bee/Bee');
 
@@ -3435,6 +3501,10 @@ var _Meadows = require('../class/bee/Meadows');
 
 var _Meadows2 = _interopRequireDefault(_Meadows);
 
+var _Common = require('../class/bee/Common');
+
+var _Common2 = _interopRequireDefault(_Common);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
@@ -3445,10 +3515,46 @@ module.exports = {
 		if (beeParams.type == "meadows") {
 			return new _Meadows2.default(beeParams);
 		}
+		if (beeParams.type == "common") {
+			return new _Common2.default(beeParams);
+		}
+	},
+	getEvolve: function getEvolve(queenType, droneType) {
+		if (!_Genetic2.default[queenType] || !_Genetic2.default[queenType][droneType]) {
+			return _utils2.default.getRndInRange(0, 1) ? evolve = queenType : evolve = droneType;
+		}
+		var branch = _Genetic2.default[queenType][droneType];
+
+		var maxProbability = this.getMaxProbability(branch);
+		var probability = _utils2.default.getRndInRange(1, maxProbability);
+		var evolve = this.findEvolve(branch, probability);
+		if (!evolve) {
+			_utils2.default.getRndInRange(0, 1) ? evolve = queenType : evolve = droneType;
+		}
+		return evolve;
+	},
+	getMaxProbability: function getMaxProbability(branch) {
+		var maxProbability = 0;
+		for (var type in branch) {
+			maxProbability += branch[type];
+		}
+		return maxProbability;
+	},
+	findEvolve: function findEvolve(branch, probability) {
+		var currentWeight = 0;
+		var specie = null;
+		for (var type in branch) {
+			currentWeight += branch[type];
+			if (probability <= currentWeight) {
+				specie = type;
+				break;
+			}
+		}
+		return specie;
 	}
 };
 
-},{"../class/bee/Bee":163,"../class/bee/Forest":164,"../class/bee/Meadows":165}],167:[function(require,module,exports){
+},{"../class/bee/Bee":163,"../class/bee/Common":164,"../class/bee/Forest":165,"../class/bee/Genetic":166,"../class/bee/Meadows":167,"../utils":169}],169:[function(require,module,exports){
 "use strict";
 
 module.exports = {
@@ -3458,7 +3564,7 @@ module.exports = {
     }
 };
 
-},{}],168:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 (function (global){
 'use strict';
 
