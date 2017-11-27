@@ -16,7 +16,6 @@ Vue.component('hive', {
     ],
     methods: {
         selectBee: function(beeRole){
-            console.log('selectBee');
             app.$emit('openModal',{
                 'hive':this,
                 'beeRole': beeRole
@@ -25,14 +24,10 @@ Vue.component('hive', {
         addBee: function(bee){
             let result = this.hive.addBee(bee);
             if(result.type == 'added'){
-                console.log('success');
                 app.game.bees[bee.type][bee.role]--;
             }else if(result.type == 'changed'){
                 app.game.bees[bee.type][bee.role]--;
                 app.game.bees[result.oldBee.type][result.oldBee.role]++;
-                console.log(result.text);
-            }else{
-                console.log(result.text);
             }
             
         },
@@ -71,30 +66,19 @@ Vue.component('hive', {
 
 Vue.component('inventory',{
     template: "#inventory",
+    props:['bees','ressources'],
     data: function(){
         return {
-            'inventory':{
-                'parts':[
-                    {
-                        name: 'Bees',
-                        data: game.bees
-                    },
-                    {
-                        name: 'Ressources',
-                        data: game.ressources
-                    }
-                ],
-                'currentCategory' : 0
-            }
+            'currentCategory' : 'bees'
         }
     }
 });
 
 Vue.component('beemodal',{
     template:"#beemodal",
+    props:['bees'],
     data:function(){
         return {
-            'bees': game.bees,
             'beeRole': 'princess',
             'modalShown' : false,
             'referalHive': null,
@@ -113,7 +97,6 @@ Vue.component('beemodal',{
     created: function(){
         let self = this;
         this.$parent.$on('openModal', function (data) {
-            
             self.beeRole = data.beeRole;
             self.referalHive = data.hive;
             self.modalShown = true;
@@ -178,6 +161,12 @@ let app = new Vue({
             }
             return total;
         }
+    },
+    created: function(){
+        let self = this;
+        this.$on('refreshBees', function (data) {
+            self.game = Object.assign({}, this.game, game);
+        });
     }
 });
 

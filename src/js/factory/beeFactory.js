@@ -42,15 +42,15 @@ module.exports = {
 	},
 	findEvolve(branch,probability){
 		let currentWeight = 0;
-		let specie = null;
-		for( let type in branch ){
-			currentWeight += branch[type];
+		let type = null;
+		for( let temptype in branch ){
+			currentWeight += branch[temptype];
 			if(probability <= currentWeight){
-				specie = type;
+				type = temptype;
 				break;
 			}
 		}
-		return specie;
+		return type;
 	}
 
 }

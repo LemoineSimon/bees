@@ -5,5 +5,12 @@ module.exports ={
 			"meadows": 40,
 			"common": 30
 		}
+	},
+	"meadows":{
+		"forest":{
+			"meadows": 40,
+			"forest": 40,
+			"common": 30
+		}
 	}
 }

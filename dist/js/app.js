@@ -2582,7 +2582,6 @@ _vue2.default.component('hive', {
     props: ['hive'],
     methods: {
         selectBee: function selectBee(beeRole) {
-            console.log('selectBee');
             app.$emit('openModal', {
                 'hive': this,
                 'beeRole': beeRole
@@ -2591,14 +2590,10 @@ _vue2.default.component('hive', {
         addBee: function addBee(bee) {
             var result = this.hive.addBee(bee);
             if (result.type == 'added') {
-                console.log('success');
                 app.game.bees[bee.type][bee.role]--;
             } else if (result.type == 'changed') {
                 app.game.bees[bee.type][bee.role]--;
                 app.game.bees[result.oldBee.type][result.oldBee.role]++;
-                console.log(result.text);
-            } else {
-                console.log(result.text);
             }
         },
         start: function start() {
@@ -2636,27 +2631,19 @@ _vue2.default.component('hive', {
 
 _vue2.default.component('inventory', {
     template: "#inventory",
+    props: ['bees', 'ressources'],
     data: function data() {
         return {
-            'inventory': {
-                'parts': [{
-                    name: 'Bees',
-                    data: game.bees
-                }, {
-                    name: 'Ressources',
-                    data: game.ressources
-                }],
-                'currentCategory': 0
-            }
+            'currentCategory': 'bees'
         };
     }
 });
 
 _vue2.default.component('beemodal', {
     template: "#beemodal",
+    props: ['bees'],
     data: function data() {
         return {
-            'bees': game.bees,
             'beeRole': 'princess',
             'modalShown': false,
             'referalHive': null,
@@ -2675,7 +2662,6 @@ _vue2.default.component('beemodal', {
     created: function created() {
         var self = this;
         this.$parent.$on('openModal', function (data) {
-
             self.beeRole = data.beeRole;
             self.referalHive = data.hive;
             self.modalShown = true;
@@ -2740,6 +2726,12 @@ var app = new _vue2.default({
             }
             return total;
         }
+    },
+    created: function created() {
+        var self = this;
+        this.$on('refreshBees', function (data) {
+            self.game = (0, _assign2.default)({}, this.game, game);
+        });
     }
 });
 
@@ -3436,6 +3428,13 @@ module.exports = {
 			"meadows": 40,
 			"common": 30
 		}
+	},
+	"meadows": {
+		"forest": {
+			"meadows": 40,
+			"forest": 40,
+			"common": 30
+		}
 	}
 };
 
@@ -3542,15 +3541,15 @@ module.exports = {
 	},
 	findEvolve: function findEvolve(branch, probability) {
 		var currentWeight = 0;
-		var specie = null;
-		for (var type in branch) {
-			currentWeight += branch[type];
+		var type = null;
+		for (var temptype in branch) {
+			currentWeight += branch[temptype];
 			if (probability <= currentWeight) {
-				specie = type;
+				type = temptype;
 				break;
 			}
 		}
-		return specie;
+		return type;
 	}
 };
 

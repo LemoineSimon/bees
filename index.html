@@ -55,9 +55,9 @@
                 </div>
             </div>
             <div style="width:40%;">
-                <inventory></inventory>
+                <inventory :bees="game.bees" :ressources="game.ressources"></inventory>
             </div>
-            <beemodal></beemodal>
+            <beemodal :bees="game.bees"></beemodal>
         </div>
     </div>
     <template id="hive">
@@ -97,25 +97,28 @@
         <div class="inventory">
             <nav class="inventory__navigation">
                 <ul>
-                    <li v-for="(partNavigation,indexNavigation) in inventory.parts" :index="indexNavigation" @click="inventory.currentCategory = indexNavigation">
-                        <a href="#" title="partNavigation.name">{{partNavigation.name}}</a>
+                    <li @click="currentCategory = 'bees'">
+                        <a href="#" title="partNavigation.name">Bees</a>
+                    </li>
+                    <li @click="currentCategory = 'ressources'">
+                        <a href="#" title="partNavigation.name">Ressources</a>
                     </li>
                 </ul>
             </nav>
             <div class="inventory__content">
                 <div class="inventory__part-container">
-                    <div  v-for="(part,index) in inventory.parts" :index="index" class="inventory__part" v-show="inventory.currentCategory == index">
-                            <div v-for="(item,value) in part.data"> 
-                                 <div v-if="part.name=='Bees'">
-                                    <div v-for="(qty, role) in item">
-                                        <div  class="bee" :data-beerole="role" :data-beeType="value"></div>
-                                        <span class="bee__quantity">x{{qty}}</span>
-                                    </div> 
-                                </div>
-                                <div v-if="part.name=='Ressources'">
-                                    <div :class="value"></div>
-                                </div>
+                    <div class="inventory__part" v-show="currentCategory == 'bees'">
+                        <div v-for="(beeRole, type) in bees">
+                            <div v-for="(qty,role) in beeRole">                           
+                                <div class="bee" :data-beerole="role" :data-beeType="type"></div>
+                                <span class="bee__quantity">x{{qty}}</span>
                             </div>
+                        </div> 
+                    </div>
+                    <div class="inventory__part" v-show="currentCategory == 'ressources'">
+                        <div  v-for="ressource in ressources">
+                            <div :class="ressource"></div>
+                        </div>
                     </div>
                 </div>
             </div>
