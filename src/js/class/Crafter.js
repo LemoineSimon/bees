@@ -1,4 +1,4 @@
-import recipes from './Recipes';
+import recipes from '../recipes';
 
 class Crafter{
 	constructor(){

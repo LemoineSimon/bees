@@ -23,17 +23,7 @@
                         <b>Money :</b> {{ game.money }}
                     </div>
                     <div class="bar__item">
-                        <div><b>Princess :</b>{{ totalPrincess }}</div>
-                        <div><b>Drones :</b> {{ totalDrone }}</div>
-                    </div>
-                    <div class="bar__item">
                         <b>Hives :</b> {{ game.hives.length }}
-                    </div>
-                    <div class="bar__item">
-                        <b>Combs :</b> {{ game.ressources.comb.length }}
-                    </div>
-                    <div class="bar__item">
-                        <b>Wood :</b> {{ game.ressources.wood }}
                     </div>
                     <div class="bar__item">
                         <button type="button" @click="saveGame">Save</button>
@@ -50,11 +40,12 @@
                         <button type="button" @click="catchBees">Catch some bees</button>
                     </div>
                 </div>
-                <div id="farm" :hives="game.hives">
+                <div id="farm">
                     <hive v-for="(hive, index) in game.hives" :hive="hive" :index="index" :key="hive.id"></hive>
                 </div>
             </div>
             <div style="width:40%;">
+                <shop :shop-items="game.shop.items"></shop>
                 <inventory :bees="game.bees" :ressources="game.ressources"></inventory>
             </div>
             <beemodal :bees="game.bees"></beemodal>
@@ -64,7 +55,7 @@
         <div class="hive" :data-state="currentState">
             <progress :value="hive.currentProgress" max="100" class="start"></progress>
             <h3 class="hive__name">#{{hive.id}}</h3>
-            <div class="hive__slot">
+            <div class="hive__slots">
                     <div class="hive__starter">
                         <div class="slot" @click="selectBee('princess')">
                             <div v-if="hive.bees.queen.length > 0" :data-beerole="hive.bees.queen[0].role" :data-beetype="hive.bees.queen[0].type" class="bee"></div>
@@ -95,47 +86,50 @@
     </template>
     <template id="inventory">
         <div class="inventory">
-            <nav class="inventory__navigation">
-                <ul>
-                    <li @click="currentCategory = 'bees'">
-                        <a href="#" title="partNavigation.name">Bees</a>
-                    </li>
-                    <li @click="currentCategory = 'ressources'">
-                        <a href="#" title="partNavigation.name">Ressources</a>
-                    </li>
-                </ul>
-            </nav>
-            <div class="inventory__content">
-                <div class="inventory__part-container">
-                    <div class="inventory__part" v-show="currentCategory == 'bees'">
-                        <div v-for="(beeRole, type) in bees">
-                            <div v-for="(qty,role) in beeRole">                           
-                                <div class="bee" :data-beerole="role" :data-beeType="type"></div>
-                                <span class="bee__quantity">x{{qty}}</span>
-                            </div>
-                        </div> 
+            <h3 class="inventory__category">Bees</h3>
+            <div class="inventory__part">
+                <div v-for="(beeRole, type) in bees">
+                    <div class="inventory__item" v-for="(qty,role) in beeRole">                           
+                        <div class="bee" :data-beerole="role" :data-beeType="type"></div>
+                        <span class="inventory__itemQty"><small>&times;</small>{{qty}}</span>
                     </div>
-                    <div class="inventory__part" v-show="currentCategory == 'ressources'">
-                        <div  v-for="ressource in ressources">
-                            <div :class="ressource"></div>
-                        </div>
+                </div> 
+            </div>
+            <h3 class="inventory__category">Ressources</h3>
+            <div class="inventory__part">
+                <div v-for="(ressourcesCat,name) in ressources" v-if="Object.keys(ressourcesCat).length !== 0">
+                    <div class="inventory__item" v-for="(qty,type) in ressourcesCat" >
+                        <div :class="name" :data-type="type"></div>
+                        <span class="inventory__itemQty"><small>&times;</small>{{qty}}</span>
                     </div>
                 </div>
             </div>
         </div>
     </template>
     <template id="beemodal">
-        <div class="bee-modal flex" v-if="modalShown" :style="{top:position.y+'px',left:position.x+'px'}">
+        <div class="bee-modal inventory flex" v-if="modalShown" :style="{top:position.y+'px',left:position.x+'px'}">
             <button class="bee-modal__close" @click="modalShown=false">X</button>
             <div v-for="(beeFam,beeType) in bees">
-                 <div v-for="(qty,role) in beeFam" v-if="role == beeRole && qty > 0" @click="selectBee(beeType,role)" class="bg--white ps" style="border: .2rem solid #CCC">
+                 <div v-for="(qty,role) in beeFam" v-if="role == beeRole && qty > 0" @click="selectBee(beeType,role)" class="inventory__item bg--white ps" style="border: .2rem solid #CCC">
                     <div  class="bee" :data-beerole="role" :data-beeType="beeType"></div>
-                    <span class="bee__quantity">x{{qty}}</span>
+                    <span class="inventory__itemQty"><small>&times;</small>{{qty}}</span>
                 </div>
             </div>
         </div>
     </template>
-    <script src="dist/js/app.js "></script>
+    <template id="shop">
+        <div>
+            <h2>Shop</h2>
+            <div v-for='item in shopItems'>
+                <div>
+                    <h3>{{item.name}}</h3>
+                    <p>Price : {{item.price}}</p>
+                    <p>En stock : {{item.stock}}</p>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script src="dist/js/app.js"></script>
 </body>
 
 </html>

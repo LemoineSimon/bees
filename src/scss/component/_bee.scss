@@ -1,28 +1,19 @@
 .bee {
-    width: 40px;
-    height: 40px;
+    @include rectangle(4rem);
     position: relative;
-    &__quantity{
-        color: #444;
-        text-align: right;
-        width: 100%;
-        display: block;
-        font-weight: 700;
-        padding: .2rem;
-    }
 }
 
 .bee{
     &[data-beerole="princess"] {
-        background-image: url('../../img/src/body1.png'), url('../../img/src/princess.body2.png'), url('../../img/src/sprite-princess.outline.png');
+        background-image: url('../../img/bees/body1.png'), url('../../img/bees/princess.body2.png'), url('../../img/bees/sprite-princess.outline.png');
         animation: playBee 5s 2s steps(5) infinite;
     }
     &[data-beerole="queen"] {
-        background-image: url('../../img/src/body1.png'), url('../../img/src/queen.body2.png'), url('../../img/src/sprite-drone.outline.png');
+        background-image: url('../../img/bees/body1.png'), url('../../img/bees/queen.body2.png'), url('../../img/bees/sprite-drone.outline.png');
         animation: playBee 5s 2s steps(5) infinite;
     }
     &[data-beerole="drone"] {
-        background-image: url('../../img/src/body1.png'), url('../../img/src/drone.body2.png'), url('../../img/src/sprite-drone.outline.png');
+        background-image: url('../../img/bees/body1.png'), url('../../img/bees/drone.body2.png'), url('../../img/bees/sprite-drone.outline.png');
         animation: playBee 5s 3.5s steps(5) infinite;
     }
     @each $bee in $bees{

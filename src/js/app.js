@@ -4,9 +4,7 @@ import State from './class/StateManager';
 import Crafter from './class/Crafter';
 
 const state = new State();
-
 const game = new Game();
-
 const crafter = new Crafter();
 
 Vue.component('hive', {
@@ -105,7 +103,12 @@ Vue.component('beemodal',{
             self.position.y = self.referalHive.$el.querySelectorAll('.hive__starter .slot')[slotIndex].getBoundingClientRect().top + 10;
         });
     }
-})
+});
+
+Vue.component('shop',{
+    template:"#shop",
+    props:['shop-items']
+});
 
 let app = new Vue({
     el: "#app",
@@ -144,6 +147,9 @@ let app = new Vue({
         },
         refreshBees: function(){
             this.game.bees = Object.assign({}, this.game.bees, game.bees);
+        },
+        refreshRessources: function(){
+            this.game.ressources = Object.assign({}, this.game.ressources, game.ressources);
         }
     },
     computed : {
@@ -164,9 +170,12 @@ let app = new Vue({
     },
     created: function(){
         let self = this;
-        this.$on('refreshBees', function (data) {
-            self.game = Object.assign({}, this.game, game);
-        });
+        document.addEventListener('newBeeType', function (e) {
+            self.refreshBees();
+        }, false);
+        document.addEventListener('newRessourceType', function (e) {
+            self.refreshBees();
+        }, false);
     }
 });
 

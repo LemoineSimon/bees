@@ -9,7 +9,7 @@
     &__name {
         margin: 0 15px 10px;
     }
-    &__slot {
+    &__slots {
         display: flex;
         align-items: center;
     }
@@ -29,6 +29,16 @@
         .slot {
             position: relative;
             margin: 0 auto;
+            cursor: pointer;
+            &:hover{
+                background-color: lighten(#949494,10);
+                &:before{
+                    border-bottom-color: lighten(#949494,10)
+                }
+                &:after{
+                    border-top-color: lighten(#949494,10)
+                }
+            }
         }
     }
     &__production {
@@ -103,6 +113,7 @@
             width: 0;
             border-top: 14.43px solid currentColor;
         }
+        
         .bee,
         .comb {
             z-index: 1;

@@ -1,43 +1,41 @@
 .inventory{
-	background-color: #EEE;
-	border: .1rem solid #ababab;
-	max-width: 480px;
-    margin: 0 auto;
-	&__navigation{
-		background: #dadada;
-    	border-bottom: .1rem solid #ababab;
-		ul{
-			margin: 0;
-			padding: 0;
-		}
-		li{
-			display: inline-block;
-			vertical-align: bottom;
-			background-color: #CCC;
-			padding: 1rem;
-			text-align: center;
-			border-left: .1rem solid #AAA;
-			border-right: .1rem solid #AAA;
-			a{
-				color: #333;
-				text-decoration: none;
-			}
-		}
-	}
-	&__content{
-		padding: 1rem;
-	}
+	background-color: map-get($inventory,background);
+	max-width: 48rem;
+    margin: 2rem auto;
+    border: .1rem solid #444;
+    padding: .5rem;
+    &__category{
+    	font-weight: 700;
+    }
 	&__part{
 		display: flex;
 		flex-wrap: wrap;
 		& > div{
 			padding: .2rem;
 			margin: 0 .2rem;
-			& > div{
-				    background-color: #fff;
-				    border: .3rem solid #b7b7b7;
-				    margin-bottom: .5rem;
-			}
 		}
+	}
+	&__item{
+		position: relative;
+		background: map-get($inventory,itemBackground);
+	    border: .1rem solid map-get($inventory,itemBorderColor);
+		padding: .2rem;
+	    margin-bottom: .5rem;
+	}
+	&__itemQty{
+		$shadowColor: map-get($inventory,itemQtyShadowColor);
+		color: map-get($inventory,itemQtyColor);
+        text-align: right;
+        font-weight: 700;
+        text-shadow: .2rem .2rem $shadowColor, .1rem -.1rem $shadowColor, -.1rem -.1rem $shadowColor, -.2rem .2rem $shadowColor, 0 .2rem $shadowColor;
+        width: 100%;
+        display: block;
+        padding: .2rem;
+        position: absolute;
+        bottom:0;
+        left:0;
+        small{
+        	font-size: 1.4rem
+        }
 	}
 }

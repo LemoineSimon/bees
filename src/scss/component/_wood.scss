@@ -1,0 +1,4 @@
+.wood{
+	@include rectangle($ressourceWidth);
+	background-image: url('../../img/ressources/wood.png');
+}

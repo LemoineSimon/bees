@@ -1,20 +1,26 @@
 import Utils from '../utils';
 import Hive from './Hive';
 import Bee from '../factory/beeFactory';
+import Shop from './Shop';
 
 const HIVE_PRICE = 40;
+let newBeeTypeEvent = new Event('newBeeType');
+let newRessourceTypeEvent = new Event('newRessourceType');
 
 class Game {
     constructor() {
         this.start = false;
-        this.money = 0;
+        this.money = 100;
         this.hives = [];
         this.bees = {};
         this.ressources = {
-            honey: [],
-            wood: 0,
-            comb: []
+            'honey': {},
+            'wood': {
+                'classic':0
+            },
+            'comb': {}
         };
+        this.shop = new Shop();
     }
     init() {
         this.start = true;
@@ -35,13 +41,13 @@ class Game {
         }
     }
     addHive() {
-        if (this.ressources.wood < HIVE_PRICE) {
+        if (this.ressources.wood.classic < HIVE_PRICE) {
             console.log('Not enough wood');
-            return
+            return;
         }
         let hive = new Hive(this.hives.length);
         this.hives.push(hive);
-        this.ressources.wood -= HIVE_PRICE;
+        this.ressources.wood.classic -= HIVE_PRICE;
     }
     collectPrincess(hive) {
         let princess = hive.nursery.princess.splice(0, 1)[0];
@@ -53,10 +59,10 @@ class Game {
     }
     collectLoot(hive, lootIndex) {
         let loot = hive.loots.splice(lootIndex, 1, null)[0];
-        this.ressources[loot.name].push(loot);
+        this.addLoot(loot);
     }
     loggingWood() {
-        this.ressources['wood'] += parseInt(2);
+        this.ressources.wood.classic += parseInt(2);
     }
     catchBees() {
         let beeTypeStarter = ['meadows','forest'];
@@ -109,6 +115,32 @@ class Game {
            }
         );
         Object.assign(this.bees,beesSave);
+        document.dispatchEvent(newBeeTypeEvent);
+    }
+
+    addLoot(loot){
+        console.log(loot);
+        console.log('addLoot');
+        if(this.ressources[loot.name][loot.type] == undefined){
+            this.addLootType(loot);
+        }
+        this.ressources[loot.name][loot.type] += 1;
+    }
+    addLootType(loot){
+        console.log('addLootType');
+        let lootSave = Object.assign({},this.ressources[loot.name]);
+        Object.defineProperty(
+            lootSave,
+            loot.type,
+            {
+                value : 0,
+                writable : true,
+                enumerable : true,
+                configurable : true
+           }
+        );
+        Object.assign(this.ressources[loot.name],lootSave);
+        document.dispatchEvent(newRessourceTypeEvent);
     }
 }
 

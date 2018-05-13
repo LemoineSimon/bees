@@ -42,16 +42,21 @@ const cleanCssConfig = {
 
 gulp.task('scss', () => {
     gulp.src(path.scss.src)
-        //.pipe(sourcemaps.init())
-        .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
+    //.pipe(sourcemaps.init())
+        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(autoprefixer(autoprefixerOpts))
         .pipe(cleanCSS(cleanCssConfig))
         //.pipe(sourcemaps.write('./maps'))
         .pipe(gulp.dest(path.css));
 });
 
-gulp.task('scripts', function() {
+gulp.task('scripts', function () {
 
+    gulp.run('vuejs');
+    gulp.run('phaser');
+});
+
+gulp.task('vuejs', function () {
     let b = browserify({
         entries: './src/js/app.js',
         debug: false,
@@ -64,7 +69,25 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest(path.js.build));
 });
 
-gulp.task('watch', function() {
+gulp.task('phaser', function () {
+    let b = browserify({
+        entries: './src/js/phaser/index.js',
+        debug: false,
+        transform: ['babelify']
+    });
+
+    return b.bundle()
+        .pipe(source('index.js'))
+        .on('error', console.error.bind(console))
+        .pipe(gulp.dest(path.js.build));
+});
+
+gulp.task('watch', function () {
     gulp.watch(path.js.src, ['scripts']);
     gulp.watch(path.scss.watch, ['scss']);
+})
+
+gulp.task('watchPhaser', function () {
+    gulp.watch(path.js.src, ['phaser']);
+    // gulp.watch(path.scss.watch, ['scss']);
 })

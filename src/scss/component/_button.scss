@@ -4,7 +4,7 @@ button {
     border: 0;
     padding: .5rem 1rem;
     border-radius: 1rem;
-    border: 2px solid #3f9838;
-    background-color: #66ab25;
-    color: #FFF;
+    border: 2px solid map-get($button,borderColor);
+    background-color: map-get($button,background);
+    color: map-get($button,color);
 }
