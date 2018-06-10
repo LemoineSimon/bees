@@ -1272,13 +1272,276 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var Elevator = function () {
+    function Elevator(scene) {
+        (0, _classCallCheck3.default)(this, Elevator);
+
+        this.scene = scene;
+        this.mapKey = 'elevator';
+        this.map = this.scene.add.tilemap(this.mapKey);
+        this.tileset = this.map.addTilesetImage('platformerPack_industrial_tilesheet', 'tiles');
+        this.state = Elevator.STATE.iddle;
+        this.width = this.map.widthInPixels;
+        this.height = this.map.heightInPixels;
+        this.x = 0;
+        this.y = 0;
+        this.create();
+    }
+
+    (0, _createClass3.default)(Elevator, [{
+        key: 'create',
+        value: function create() {
+            this.createFloor();
+            this.createBackground();
+            this.createDecoration();
+            this.createSensor();
+        }
+    }, {
+        key: 'createBackground',
+        value: function createBackground() {
+            this.backgroundLayer = this.map.createDynamicLayer(Elevator.BACKGROUND, this.tileset, this.x, this.y);
+        }
+    }, {
+        key: 'createFloor',
+        value: function createFloor() {
+            this.floorLayer = this.map.createDynamicLayer(Elevator.FLOOR, this.tileset, this.x, this.y);
+            this.floorLayer.setCollisionByExclusion([-1], true);
+            this.scene.physics.add.collider(this.scene.player.entity, this.floorLayer);
+        }
+    }, {
+        key: 'createDecoration',
+        value: function createDecoration() {
+            this.decorationLayer = this.map.createDynamicLayer(Elevator.DECORATION, this.tileset, this.x, this.y);
+        }
+    }, {
+        key: 'createSensor',
+        value: function createSensor() {
+            var _this = this;
+
+            var sensorLayer = this.map.getObjectLayer(Elevator.SENSOR);
+            sensorLayer.objects.map(function (sensor) {
+                var x = _this.x + sensor.x;
+                var y = _this.y + sensor.y;
+                _this.sensor = new Phaser.Geom.Rectangle(x, y, sensor.width, sensor.height);
+            });
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+            if (this.sensor) {
+                this.checkSensor();
+            }
+        }
+    }, {
+        key: 'checkSensor',
+        value: function checkSensor() {
+            var intersectSensor = Phaser.Geom.Intersects.RectangleToRectangle(this.sensor, this.scene.player.entity.body);
+            if (!intersectSensor) {
+                return;
+            }
+            if (this.scene.cursors.down.isDown && this.state === Elevator.STATE.iddle) {
+                this.down();
+            }
+            if (this.scene.cursors.up.isDown && this.state === Elevator.STATE.iddle) {
+                this.up();
+            }
+        }
+    }, {
+        key: 'up',
+        value: function up() {
+            var _this2 = this;
+
+            if (this.y === 0) {
+                return;
+            }
+            this.state = Elevator.STATE.moving;
+            this.y -= this.height;
+            var tween = this.scene.tweens.add({
+                targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
+                y: this.y,
+                duration: 1500,
+                ease: 'Power3',
+                onUpdate: function onUpdate() {
+                    // We force the player to not moving
+                    _this2.scene.player.entity.setVelocityY(0);
+                },
+                onComplete: function onComplete() {
+                    _this2.state = Elevator.STATE.iddle;
+                }
+            });
+        }
+    }, {
+        key: 'down',
+        value: function down() {
+            var _this3 = this;
+
+            this.state = Elevator.STATE.moving;
+            this.y += this.height;
+            var tween = this.scene.tweens.add({
+                targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
+                y: this.y,
+                duration: 1500,
+                ease: 'Power3',
+                onUpdate: function onUpdate() {
+                    // We force the player to not moving
+                    _this3.scene.player.entity.setVelocityY(600);
+                },
+                onComplete: function onComplete() {
+                    _this3.state = Elevator.STATE.iddle;
+                    console.log(_this3);
+                }
+            });
+        }
+    }], [{
+        key: 'BACKGROUND',
+        get: function get() {
+            return 'background';
+        }
+    }, {
+        key: 'FLOOR',
+        get: function get() {
+            return 'floor';
+        }
+    }, {
+        key: 'DECORATION',
+        get: function get() {
+            return 'decoration';
+        }
+    }, {
+        key: 'SENSOR',
+        get: function get() {
+            return 'elevatorArea';
+        }
+    }, {
+        key: 'STATE',
+        get: function get() {
+            return {
+                'iddle': 'iddle',
+                'moving': 'moving'
+            };
+        }
+    }]);
+    return Elevator;
+}();
+
+exports.default = Elevator;
+
+},{"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8}],87:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = require("D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _Room = require("./Room");
+
+var _Room2 = _interopRequireDefault(_Room);
+
+var _Elevator = require("./Elevator");
+
+var _Elevator2 = _interopRequireDefault(_Elevator);
+
+var _RoomManager = require("./RoomManager");
+
+var _RoomManager2 = _interopRequireDefault(_RoomManager);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MapManager = function () {
+    function MapManager(scene) {
+        var _this = this;
+
+        (0, _classCallCheck3.default)(this, MapManager);
+
+        this.scene = scene;
+        this.maxRooms = 5;
+        this.roomOffset = 0;
+        this.roomManager = new _RoomManager2.default(this.scene);
+        this.scene.events.on('buildRoom', function (roomParams) {
+            _this.addRoom(roomParams);
+        });
+    }
+
+    (0, _createClass3.default)(MapManager, [{
+        key: "_init",
+        value: function _init() {
+            this.addElevator();
+            this.addRoom({ x: this.roomOffset, y: 0, widthInPixels: 0, heightInPixels: 0 });
+        }
+    }, {
+        key: "addElevator",
+        value: function addElevator() {
+            this.elevator = new _Elevator2.default(this.scene);
+            this.roomOffset = this.elevator.map.widthInPixels;
+        }
+    }, {
+        key: "addRoom",
+        value: function addRoom(roomParams) {
+            this.roomManager.add(roomParams);
+            this.scene.events.emit('updateWorldSize');
+        }
+    }, {
+        key: "update",
+        value: function update() {
+            this.elevator.update();
+            this.roomManager.update();
+        }
+    }, {
+        key: "getWidth",
+        value: function getWidth() {
+            var maxWidthRaw = 0;
+            this.roomManager.rooms.map(function (roomRaw) {
+                console.log(roomRaw);
+                if (roomRaw.length > maxWidthRaw.length) {
+                    maxWidthRaw = roomRaw;
+                }
+            });
+            console.log(maxWidthRaw);
+            console.log(maxWidthRaw[maxWidthRaw.length - 1]);
+            // return maxWidthRaw[maxWidthRaw.length - 1].map.widthInPixels * maxWidthRaw.length;
+        }
+    }, {
+        key: "getHeight",
+        value: function getHeight() {
+            return this.roomManager.rooms[this.roomManager.rooms.length - 1][0].map.heightInPixels * this.roomManager.rooms.length;
+        }
+    }]);
+    return MapManager;
+}();
+
+exports.default = MapManager;
+
+},{"./Elevator":86,"./Room":89,"./RoomManager":90,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8}],88:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _classCallCheck2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var Player = function () {
     function Player(scene) {
         (0, _classCallCheck3.default)(this, Player);
 
         this.scene = scene;
         this.entity = null;
-        // this.create();
     }
 
     (0, _createClass3.default)(Player, [{
@@ -1338,7 +1601,7 @@ var Player = function () {
 
 exports.default = Player;
 
-},{"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8}],87:[function(require,module,exports){
+},{"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8}],89:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1428,7 +1691,7 @@ var Room = function () {
         key: 'createDoorModule',
         value: function createDoorModule() {
             this.createDoors();
-            this.createSensors();
+            this.createSensor();
             this.createDoorsTweens();
         }
     }, {
@@ -1438,7 +1701,6 @@ var Room = function () {
 
             var doorGroup = this.scene.physics.add.staticGroup();
             var doorsLayer = this.map.getObjectLayer(Room.DOORS);
-            var doors = [];
             doorsLayer.objects.map(function (doorElement) {
                 var x = doorElement.x + _this.x + _this.map.tileWidth / 2;
                 var y = doorElement.y + _this.y - _this.map.tileHeight / 2;
@@ -1449,8 +1711,8 @@ var Room = function () {
             this.doors = doorGroup;
         }
     }, {
-        key: 'createSensors',
-        value: function createSensors() {
+        key: 'createSensor',
+        value: function createSensor() {
             var _this2 = this;
 
             var doorSensorLayer = this.map.getObjectLayer(Room.DOORSENSOR);
@@ -1486,7 +1748,6 @@ var Room = function () {
                     return;
                 }
                 if (intersectSensor && _this3.doorsState === Room.DOORSSTATE.close) {
-                    console.log(intersectSensor, _this3.doorsState === Room.DOORSSTATE.close);
                     _this3.scene.events.emit('buildRoom', {
                         x: _this3.x,
                         y: _this3.y,
@@ -1579,7 +1840,7 @@ var Room = function () {
 
 exports.default = Room;
 
-},{"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8}],88:[function(require,module,exports){
+},{"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8}],90:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1602,55 +1863,47 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var RoomManager = function () {
     function RoomManager(scene) {
-        var _this = this;
-
         (0, _classCallCheck3.default)(this, RoomManager);
 
         this.scene = scene;
         this.rooms = [[]];
-        this.scene.events.on('buildRoom', function (roomParams) {
-            console.log('buildRoom');
-            _this.build(roomParams);
-        });
     }
+
+    /**
+     * @param {Object} roomParams
+     * @param {number} roomParams.y
+     * @param {number} roomParams.x
+     * @param {number} roomParams.widthInPixels
+     * @param {number} roomParams.heightInPixels
+     **/
+
 
     (0, _createClass3.default)(RoomManager, [{
         key: 'add',
-        value: function add() {
-            var room = new _Room2.default(this.scene, { id: this.rooms.length });
-            this.rooms[0][0] = room;
-            console.log(this.rooms);
-        }
-    }, {
-        key: 'build',
-        value: function build(roomParams) {
+        value: function add(roomParams) {
             // console.log(roomParams);
             var roomCoords = {};
 
             if (roomParams.x !== undefined) {
                 roomCoords.x = roomParams.x + roomParams.widthInPixels;
             } else {
-                roomCoords.x = roomParams.widthInPixels;
+                roomCoords.x = roomParams.widthInPixels !== undefined ? roomParams.widthInPixels : 0;
             }
 
             if (roomParams.y !== undefined) {
                 roomCoords.y = roomParams.y;
             } else {
-                roomCoords.y = 0;
+                roomCoords.y = roomParams.heightInPixels !== undefined ? roomParams.heightInPixels : 0;
             }
+
             var room = new _Room2.default(this.scene, {
                 coords: roomCoords,
                 id: this.rooms.length + 1,
                 type: 'room-sas'
             });
-            console.log(roomCoords.x, roomParams.widthInPixels);
-            console.log(Math.floor(roomCoords.y / roomParams.heightInPixels));
-            console.log(Math.floor(roomCoords.x / roomParams.widthInPixels));
-            var matriceY = Math.floor(roomCoords.y / roomParams.heightInPixels);
-            var matriceX = Math.floor(roomCoords.x / roomParams.widthInPixels);
+            var matriceY = Math.floor(roomCoords.y / room.map.heightInPixels);
+            var matriceX = Math.floor(roomCoords.x / room.map.widthInPixels);
             this.rooms[matriceY][matriceX] = room;
-            console.log(this.rooms);
-            this.scene.events.emit('updateWorldSize');
         }
     }, {
         key: 'update',
@@ -1667,7 +1920,7 @@ var RoomManager = function () {
 
 exports.default = RoomManager;
 
-},{"./Room":87,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8}],89:[function(require,module,exports){
+},{"./Room":89,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8}],91:[function(require,module,exports){
 'use strict';
 
 var _Load = require('./scene/Load');
@@ -1698,7 +1951,7 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-},{"./scene/Load":90,"./scene/Main":91}],90:[function(require,module,exports){
+},{"./scene/Load":92,"./scene/Main":93}],92:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1746,7 +1999,8 @@ var LoadScene = function (_Phaser$Scene) {
                 frameHeight: 111,
                 endFrame: 23
             });
-            this.load.tilemapTiledJSON('room', 'maps/room.json');
+
+            // Load images and spritesheets
             this.load.image('tiles', 'img/assets/platformerPack_industrial_tilesheet.png');
             // I load the tiles as a spritesheet so I can use it for both sprites and tiles
             this.load.spritesheet('tilesspritesheet', 'img/assets/platformerPack_industrial_tilesheet.png', {
@@ -1754,6 +2008,9 @@ var LoadScene = function (_Phaser$Scene) {
                 frameHeight: 70,
                 endFrame: 107
             });
+
+            this.load.tilemapTiledJSON('room', 'maps/room.json');
+            this.load.tilemapTiledJSON('elevator', 'maps/elevator.json');
         }
     }, {
         key: 'create',
@@ -1766,7 +2023,7 @@ var LoadScene = function (_Phaser$Scene) {
 
 exports.default = LoadScene;
 
-},{"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":3,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":10}],91:[function(require,module,exports){
+},{"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":3,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":10}],93:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1797,9 +2054,9 @@ var _Player = require('../class/Player');
 
 var _Player2 = _interopRequireDefault(_Player);
 
-var _RoomManager = require('../class/RoomManager');
+var _MapManager = require('../class/MapManager');
 
-var _RoomManager2 = _interopRequireDefault(_RoomManager);
+var _MapManager2 = _interopRequireDefault(_MapManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1813,10 +2070,11 @@ var MainScene = function (_Phaser$Scene) {
             key: 'MainScene'
         }));
 
-        _this.roomManager = null;
+        _this.mapManager = null;
         _this.player = null;
         _this.cursors = null;
         _this.keys = [];
+        _this.cameraSafeZone = 350;
         return _this;
     }
 
@@ -1824,47 +2082,39 @@ var MainScene = function (_Phaser$Scene) {
         key: 'preload',
         value: function preload() {
             this.player = new _Player2.default(this);
-            this.roomManager = new _RoomManager2.default(this);
+            this.mapManager = new _MapManager2.default(this);
         }
     }, {
         key: 'create',
         value: function create() {
-            var _this2 = this;
-
             this.cursors = this.input.keyboard.createCursorKeys();
             this.player.create();
-            this.roomManager.add();
+            this.mapManager._init();
 
-            this.physics.world.bounds.width = 1600;
+            this.physics.world.bounds.width = 350 * 6;
+            this.physics.world.bounds.height = 350 * 6;
 
-            this.cameras.main.setSize(800, 600);
-            this.cameras.main.startFollow(this.player.entity);
             this.cameras.main.setBounds(this.physics.world.bounds.left, this.physics.world.bounds.top, this.physics.world.bounds.width, this.physics.world.bounds.height);
-            this.updateWorldSize();
-            this.events.on('updateWorldSize', function () {
-                _this2.updateWorldSize();
-            });
+            this.cameras.main.startFollow(this.player.entity);
+
+            this.player.entity.depth = 11;
         }
     }, {
         key: 'update',
         value: function update() {
             this.player.update();
-            this.roomManager.update();
+            this.mapManager.update();
         }
     }, {
         key: 'updateWorldSize',
         value: function updateWorldSize() {
             var width = 0;
             var height = 0;
-            var maxWidthRaw = [];
-            var maxHeightRaw = this.roomManager.rooms[this.roomManager.rooms.length - 1][0].map.heightInPixels * this.roomManager.rooms.length;
-            this.roomManager.rooms.map(function (roomRaw) {
-                if (roomRaw.length > maxWidthRaw.length) {
-                    maxWidthRaw = roomRaw[roomRaw.length - 1].map.widthInPixels * roomRaw.length;
-                }
-            });
-            this.physics.world.bounds.width = maxWidthRaw + 350;
-            this.physics.world.bounds.height = maxHeightRaw + 350;
+            var maxWidthRaw = this.mapManager.getWidth();
+            var maxHeightRaw = this.mapManager.getHeight();
+
+            this.physics.world.bounds.width = maxWidthRaw + this.cameraSafeZone;
+            this.physics.world.bounds.height = maxHeightRaw + this.cameraSafeZone;
             this.cameras.main.setBounds(this.physics.world.bounds.left, this.physics.world.bounds.top, this.physics.world.bounds.width, this.physics.world.bounds.height);
         }
     }]);
@@ -1873,4 +2123,4 @@ var MainScene = function (_Phaser$Scene) {
 
 exports.default = MainScene;
 
-},{"../class/Player":86,"../class/RoomManager":88,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":3,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":10}]},{},[89]);
+},{"../class/MapManager":87,"../class/Player":88,"D:\\www\\bees\\node_modules\\babel-runtime/core-js/object/get-prototype-of":3,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/classCallCheck":7,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/createClass":8,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/inherits":9,"D:\\www\\bees\\node_modules\\babel-runtime/helpers/possibleConstructorReturn":10}]},{},[91]);

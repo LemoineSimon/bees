@@ -62,14 +62,13 @@ class Room {
 
     createDoorModule() {
         this.createDoors();
-        this.createSensors();
+        this.createSensor();
         this.createDoorsTweens()
     }
 
     createDoors() {
         let doorGroup = this.scene.physics.add.staticGroup();
         let doorsLayer = this.map.getObjectLayer(Room.DOORS);
-        let doors = [];
         doorsLayer.objects.map(doorElement => {
             let x = doorElement.x + this.x + this.map.tileWidth / 2;
             let y = doorElement.y + this.y - this.map.tileHeight / 2;
@@ -80,7 +79,7 @@ class Room {
         this.doors = doorGroup;
     }
 
-    createSensors() {
+    createSensor() {
         let doorSensorLayer = this.map.getObjectLayer(Room.DOORSENSOR);
         doorSensorLayer.objects.map(sensor => {
             let x = this.x + sensor.x;
@@ -110,7 +109,6 @@ class Room {
                 return;
             }
             if (intersectSensor && this.doorsState === Room.DOORSSTATE.close) {
-                console.log(intersectSensor, this.doorsState === Room.DOORSSTATE.close);
                 this.scene.events.emit('buildRoom', {
                     x: this.x,
                     y: this.y,

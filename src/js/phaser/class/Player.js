@@ -2,7 +2,6 @@ class Player {
     constructor(scene) {
         this.scene = scene;
         this.entity = null;
-        // this.create();
     }
 
     create() {

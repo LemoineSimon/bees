@@ -5,6 +5,7 @@ class LoadScene extends Phaser.Scene {
         });
     }
 
+
     preload() {
         this.load.image('ground', 'img/assets/ground.png');
         this.load.spritesheet('player',
@@ -15,7 +16,8 @@ class LoadScene extends Phaser.Scene {
                 endFrame: 23
             }
         );
-        this.load.tilemapTiledJSON('room', 'maps/room.json');
+
+        // Load images and spritesheets
         this.load.image('tiles', 'img/assets/platformerPack_industrial_tilesheet.png');
         // I load the tiles as a spritesheet so I can use it for both sprites and tiles
         this.load.spritesheet('tilesspritesheet', 'img/assets/platformerPack_industrial_tilesheet.png', {
@@ -24,6 +26,8 @@ class LoadScene extends Phaser.Scene {
             endFrame: 107
         });
 
+        this.load.tilemapTiledJSON('room', 'maps/room.json');
+        this.load.tilemapTiledJSON('elevator', 'maps/elevator.json');
     }
 
     create() {
