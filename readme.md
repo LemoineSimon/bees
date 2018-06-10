@@ -1,6 +1,9 @@
 # Bees
-Bees is a simple web game created with [Vue.js](https://vuejs.org/)
-It is inspired from the bees of [Forestry Minecraft Mod](https://github.com/ForestryMC/ForestryMC) and use some assets of this mod.
+Bees is a web game created with Phaser 3.
+At the begin it was started with VueJS.
+It is inspired from the bees mod [Forestry Minecraft Mod](https://github.com/ForestryMC/ForestryMC) and use some assets of this mod.
+
+Currently in development.
 
 ### Install
 
@@ -8,8 +11,4 @@ It is inspired from the bees of [Forestry Minecraft Mod](https://github.com/Fore
     npm install --save-dev
 
 ### Development
-Preprocess SCSS into CSS `gulp scss`
-
-Browserify and ES6 support `gulp scripts`
-
-Watch `gulp watch`
+Run gulp watchPhaser `gulp watchPhaser`

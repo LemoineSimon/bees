@@ -70,8 +70,8 @@ class Elevator {
         let tween = this.scene.tweens.add({
             targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
             y: this.y,
-            duration: 1500,
-            ease: 'Power3',
+            duration: 1000,
+            ease: 'Sine.easeOut',
             onUpdate: () => {
                 // We force the player to not moving
                 this.scene.player.entity.setVelocityY(0);
@@ -88,15 +88,14 @@ class Elevator {
         let tween = this.scene.tweens.add({
             targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
             y: this.y,
-            duration: 1500,
-            ease: 'Power3',
+            duration: 1000,
+            ease: 'Sine.easeOut',
             onUpdate: () => {
                 // We force the player to not moving
                 this.scene.player.entity.setVelocityY(600);
             },
             onComplete: () => {
                 this.state = Elevator.STATE.iddle;
-                console.log(this);
             }
         });
     }

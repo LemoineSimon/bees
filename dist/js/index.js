@@ -1359,8 +1359,8 @@ var Elevator = function () {
             var tween = this.scene.tweens.add({
                 targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
                 y: this.y,
-                duration: 1500,
-                ease: 'Power3',
+                duration: 1000,
+                ease: 'Sine.easeOut',
                 onUpdate: function onUpdate() {
                     // We force the player to not moving
                     _this2.scene.player.entity.setVelocityY(0);
@@ -1380,15 +1380,14 @@ var Elevator = function () {
             var tween = this.scene.tweens.add({
                 targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
                 y: this.y,
-                duration: 1500,
-                ease: 'Power3',
+                duration: 1000,
+                ease: 'Sine.easeOut',
                 onUpdate: function onUpdate() {
                     // We force the player to not moving
                     _this3.scene.player.entity.setVelocityY(600);
                 },
                 onComplete: function onComplete() {
                     _this3.state = Elevator.STATE.iddle;
-                    console.log(_this3);
                 }
             });
         }
