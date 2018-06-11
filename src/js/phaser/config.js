@@ -1,7 +1,7 @@
-import LoadScene from './scene/Load';
-import MainScene from './scene/Main';
+import LoadScene from "./scene/Load";
+import MainScene from "./scene/Main";
 
-let config = {
+module.exports = {
     type: Phaser.AUTO,
     parent: 'game',
     width: 800,
@@ -18,6 +18,4 @@ let config = {
         LoadScene,
         MainScene
     ]
-};
-
-let game = new Phaser.Game(config);
+}

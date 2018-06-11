@@ -8,7 +8,7 @@ class MapManager {
         this.maxRooms = 5;
         this.roomOffset = 0;
         this.roomManager = new RoomManager(this.scene);
-        this.scene.events.on('buildRoom', (roomParams) => {
+        window.EventBus.on('build-room', roomParams => {
             this.addRoom(roomParams);
         });
     }
@@ -25,29 +25,11 @@ class MapManager {
 
     addRoom(roomParams) {
         this.roomManager.add(roomParams);
-        this.scene.events.emit('updateWorldSize');
     }
 
     update() {
         this.elevator.update();
         this.roomManager.update();
-    }
-
-    getWidth() {
-        let maxWidthRaw = 0;
-        this.roomManager.rooms.map(roomRaw => {
-            console.log(roomRaw);
-            if (roomRaw.length > maxWidthRaw.length) {
-                maxWidthRaw = roomRaw;
-            }
-        });
-        console.log(maxWidthRaw);
-        console.log(maxWidthRaw[maxWidthRaw.length - 1]);
-        // return maxWidthRaw[maxWidthRaw.length - 1].map.widthInPixels * maxWidthRaw.length;
-    }
-
-    getHeight() {
-        return this.roomManager.rooms[this.roomManager.rooms.length - 1][0].map.heightInPixels * this.roomManager.rooms.length;
     }
 }
 

@@ -1,10 +1,8 @@
-$bees : (
-	'default': '',
-	'meadows': '',
-	'forest': '',
-	'common': ''
+$bees: (
+        'default': '',
+        'meadows': '',
+        'forest': '',
+        'common': ''
 );
 
-// Its a square
-$ressourceWidth: 4rem;
-$ressourceHeight: 4rem;
+$radius: 4px;

@@ -4,9 +4,28 @@
     <title>Bees</title>
     <meta name="charset" content="utf-8">
     <meta name="description" content="A game inspired by Minecraft Forestry mod">
+    <link rel="stylesheet" href="dist/css/game.css" type="text/css">
 </head>
 <body>
-<div id="game"></div>
+
+<div id="app" class="l-app">
+    <div id="game" class="l-app__canvas"></div>
+    <build-menu
+            :show="showBuildMenu"
+            @close="showBuildMenu = false"
+            @build-room-right="buildRoom('right')"
+            @build-room-bottom="buildRoom('bottom')">
+    </build-menu>
+</div>
+
+<script type="text/x-template" id="build-menu">
+    <div class="o-menu o-menu--build" :class="{'is-visible':show}">
+        <button class="o-menu__close" @click="$emit('close')">Fermer</button>
+        <button class="room" @click="$emit('build-room-right')">Right</button>
+        <button class="room" @click="$emit('build-room-bottom')">Bottom</button>
+    </div>
+</script>
+
 <script src="src/js/phaser/phaser.js"></script>
 <script src="dist/js/index.js"></script>
 </body>

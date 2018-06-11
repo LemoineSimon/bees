@@ -1,6 +1,5 @@
 # Bees
 Bees is a web game created with Phaser 3.
-At the begin it was started with VueJS.
 It is inspired from the bees mod [Forestry Minecraft Mod](https://github.com/ForestryMC/ForestryMC) and use some assets of this mod.
 
 Currently in development.

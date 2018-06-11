@@ -71,7 +71,7 @@ gulp.task('vuejs', function () {
 
 gulp.task('phaser', function () {
     let b = browserify({
-        entries: './src/js/phaser/index.js',
+        entries: './src/js/index.js',
         debug: false,
         transform: ['babelify']
     });
@@ -89,5 +89,5 @@ gulp.task('watch', function () {
 
 gulp.task('watchPhaser', function () {
     gulp.watch(path.js.src, ['phaser']);
-    // gulp.watch(path.scss.watch, ['scss']);
+    gulp.watch(path.scss.watch, ['scss']);
 })

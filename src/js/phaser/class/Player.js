@@ -2,6 +2,7 @@ class Player {
     constructor(scene) {
         this.scene = scene;
         this.entity = null;
+        this.buildKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B);
     }
 
     create() {
@@ -9,6 +10,15 @@ class Player {
         this.entity.setCollideWorldBounds(true);
         this.scene.physics.add.collider(this.entity, this.scene.physics.world);
         this.setAnimation();
+        this.scene.input.keyboard.on('keydown', (event) => {
+            switch (event.keyCode) {
+                case this.buildKey.keyCode:
+                    window.EventBus.emit('toggle-build-menu');
+                    break;
+                default:
+                    break;
+            }
+        })
     }
 
     setAnimation() {

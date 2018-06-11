@@ -1,0 +1,16 @@
+.o-menu {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: #DDDDDD;
+  border-radius: $radius;
+  padding: 1rem;
+  transform: translate(-50%, -50%);
+}
+
+.o-menu--build {
+  display: none;
+  &.is-visible {
+    display: block;
+  }
+}
