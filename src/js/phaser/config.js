@@ -1,5 +1,6 @@
 import LoadScene from "./scene/Load";
 import MainScene from "./scene/Main";
+import InventoryScene from "./scene/Inventory";
 
 module.exports = {
     type: Phaser.AUTO,
@@ -16,6 +17,7 @@ module.exports = {
     },
     scene: [
         LoadScene,
+        InventoryScene,
         MainScene
     ]
 }

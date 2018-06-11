@@ -109,7 +109,7 @@ class Room {
                 return;
             }
             if (intersectSensor && this.doorsState === Room.DOORSSTATE.close) {
-                window.EventBus.emit('build-room', {
+                this.scene.events.emit('build-room', {
                     x: this.x,
                     y: this.y,
                     widthInPixels: this.map.widthInPixels,

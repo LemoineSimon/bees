@@ -19,6 +19,8 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
+        this.inventory = this.scene.get('InventoryScene');
+        this.scene.launch('InventoryScene');
         this.cursors = this.input.keyboard.createCursorKeys();
         this.player.create();
         this.mapManager._init();
@@ -28,7 +30,6 @@ class MainScene extends Phaser.Scene {
 
         this.cameras.main.setBounds(this.physics.world.bounds.left, this.physics.world.bounds.top, this.physics.world.bounds.width, this.physics.world.bounds.height);
         this.cameras.main.startFollow(this.player.entity);
-
         this.player.entity.depth = 11;
     }
 
@@ -42,7 +43,6 @@ class MainScene extends Phaser.Scene {
         let height = 0;
         let maxWidthRaw = this.mapManager.getWidth();
         let maxHeightRaw = this.mapManager.getHeight();
-
         this.physics.world.bounds.width = maxWidthRaw + this.cameraSafeZone;
         this.physics.world.bounds.height = maxHeightRaw + this.cameraSafeZone;
         this.cameras.main.setBounds(this.physics.world.bounds.left, this.physics.world.bounds.top, this.physics.world.bounds.width, this.physics.world.bounds.height);

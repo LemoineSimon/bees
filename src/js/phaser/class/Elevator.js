@@ -74,7 +74,7 @@ class Elevator {
             ease: 'Sine.easeOut',
             onUpdate: () => {
                 // We force the player to not moving
-                this.scene.player.entity.setVelocityY(0);
+                this.scene.player.getCharacter().body.setVelocityY(0);
             },
             onComplete: () => {
                 this.state = Elevator.STATE.iddle;
@@ -92,7 +92,7 @@ class Elevator {
             ease: 'Sine.easeOut',
             onUpdate: () => {
                 // We force the player to not moving
-                this.scene.player.entity.setVelocityY(600);
+                this.scene.player.getCharacter().body.setVelocityY(600);
             },
             onComplete: () => {
                 this.state = Elevator.STATE.iddle;

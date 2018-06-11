@@ -8,7 +8,7 @@ class MapManager {
         this.maxRooms = 5;
         this.roomOffset = 0;
         this.roomManager = new RoomManager(this.scene);
-        window.EventBus.on('build-room', roomParams => {
+        this.scene.events.on('build-room', roomParams => {
             this.addRoom(roomParams);
         });
     }
