@@ -10,12 +10,6 @@
 
 <div id="app" class="l-app">
     <div id="game" class="l-app__canvas"></div>
-    <build-menu
-            :show="showBuildMenu"
-            @close="showBuildMenu = false"
-            @build-room-right="buildRoom('right')"
-            @build-room-bottom="buildRoom('bottom')">
-    </build-menu>
 </div>
 
 <script type="text/x-template" id="build-menu">

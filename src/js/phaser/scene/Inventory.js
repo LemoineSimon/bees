@@ -61,9 +61,9 @@ class InventoryScene extends Phaser.Scene {
     }
 
     _createUI() {
-        let gameHeight = this._getGameHeight();
-        let gameWidth = this._getGameWidth();
-        let dimensions = this._calculateWindowDimensions(gameWidth, gameHeight);
+        // let gameHeight = this._getGameHeight();
+        // let gameWidth = this._getGameWidth();
+        // let dimensions = this._calculateWindowDimensions(gameWidth, gameHeight);
         this._createCategories();
     }
 
@@ -114,8 +114,8 @@ class InventoryScene extends Phaser.Scene {
             button.action = category.action;
             button.setInteractive();
             button.on('pointerdown', () => {
-                console.log('click');
                 this.events.emit(button.action);
+                this.hide();
             });
             this.group.add(button);
         })

@@ -93,7 +93,7 @@ class Room {
             });
             graphics.fillRectShape(this.doorSensor);
         });
-        this.actionKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.actionKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
 
     update() {

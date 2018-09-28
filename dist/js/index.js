@@ -1555,8 +1555,9 @@ var Player = function () {
         };
         this.scene = scene;
         this.entity = this.scene.add.container(110, 80);
-        this.buildKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-        console.log(this.entity);
+        this.inventoryKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.actionKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.wearing = false;
     }
 
     (0, _createClass3.default)(Player, [{
@@ -1598,16 +1599,32 @@ var Player = function () {
     }, {
         key: 'update',
         value: function update() {
+            this.moving();
+        }
+    }, {
+        key: 'moving',
+        value: function moving() {
+            var _this = this;
+
             if (this.scene.cursors.left.isDown) {
                 this.entity.body.setVelocityX(-300);
                 this.getCharacter().anims.play('left', true);
-                this.entity.getFirst('name', 'character').flipX = true;
-                this.entity.getFirst('name', 'hive').flipX = true;
+                this.entity.body.scaleX = -1;
+                this.entity.getAll('name', 'character').forEach(function (sprite) {
+                    sprite.flipX = true;
+                });
+                this.entity.getAll('name', 'hive').forEach(function (sprite) {
+                    sprite.x = sprite.width * sprite.scaleX - _this.character.width;
+                });
             } else if (this.scene.cursors.right.isDown) {
                 this.entity.body.setVelocityX(300);
                 this.getCharacter().anims.play('right', true);
-                this.entity.getFirst('name', 'character').flipX = false;
-                this.entity.getFirst('name', 'hive').flipX = false;
+                this.entity.getAll('name', 'character').forEach(function (sprite) {
+                    sprite.flipX = false;
+                });
+                this.entity.getAll('name', 'hive').forEach(function (sprite) {
+                    sprite.x = _this.character.width - sprite.width * sprite.scaleX;
+                });
             } else {
                 this.entity.body.setVelocityX(0);
                 this.getCharacter().anims.play('turn');
@@ -1625,19 +1642,28 @@ var Player = function () {
     }, {
         key: 'setEvents',
         value: function setEvents() {
-            var _this = this;
+            var _this2 = this;
 
             this.scene.input.keyboard.on('keydown', function (event) {
+                console.log(event);
                 switch (event.keyCode) {
-                    case _this.buildKey.keyCode:
-                        _this.scene.inventory.toggle();
+                    case _this2.inventoryKey.keyCode:
+                        _this2.scene.inventory.toggle();
+                        break;
+                    case _this2.actionKey.keyCode:
+                        console.log('ACTION KEY');
+                        if (_this2.carring) {
+                            if (_this2.carring === 'hive') {
+                                _this2.placeObject('hive');
+                            }
+                        }
                         break;
                     default:
                         break;
                 }
             });
             this.scene.inventory.events.on('select-hive', function () {
-                _this.selectHive();
+                _this2.selectHive();
             });
             this.scene.inventory.events.on('select-bee', function () {
                 console.log('select bee');
@@ -1650,7 +1676,30 @@ var Player = function () {
             hive.setScale(.5);
             hive.name = 'hive';
             this.entity.add(hive);
-            console.log(this.entity);
+            this.carring = 'hive';
+        }
+    }, {
+        key: 'placeObject',
+        value: function placeObject(objectType) {
+            switch (objectType) {
+                case 'hive':
+                    // Maybe call an itemManager ?
+                    // this.scene.add.sprite(this.entity.x + this.entity.width, this.entity.y + 35, 'hive');
+                    var x = this.entity.x + this.entity.width / 2 + 35;
+                    var y = this.entity.y + this.entity.height / 2 - 35;
+                    this.scene.add.sprite(x, y, 'hive');
+                    this.removeCarring();
+                default:
+                    break;
+            }
+        }
+    }, {
+        key: 'removeCarring',
+        value: function removeCarring() {
+            this.entity.getAll('name', this.carring).forEach(function (sprite) {
+                sprite.destroy();
+            });
+            this.carring = false;
         }
     }]);
     return Player;
@@ -1785,7 +1834,7 @@ var Room = function () {
                 });
                 graphics.fillRectShape(_this2.doorSensor);
             });
-            this.actionKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+            this.actionKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         }
     }, {
         key: 'update',
@@ -2115,9 +2164,9 @@ var InventoryScene = function (_Phaser$Scene) {
     }, {
         key: '_createUI',
         value: function _createUI() {
-            var gameHeight = this._getGameHeight();
-            var gameWidth = this._getGameWidth();
-            var dimensions = this._calculateWindowDimensions(gameWidth, gameHeight);
+            // let gameHeight = this._getGameHeight();
+            // let gameWidth = this._getGameWidth();
+            // let dimensions = this._calculateWindowDimensions(gameWidth, gameHeight);
             this._createCategories();
         }
     }, {
@@ -2184,8 +2233,8 @@ var InventoryScene = function (_Phaser$Scene) {
                 button.action = category.action;
                 button.setInteractive();
                 button.on('pointerdown', function () {
-                    console.log('click');
                     _this2.events.emit(button.action);
+                    _this2.hide();
                 });
                 _this2.group.add(button);
             });
