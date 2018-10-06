@@ -39,15 +39,15 @@
          "name":"elevatorArea",
          "objects":[
                 {
-                 "height":210,
+                 "height":140,
                  "id":1,
-                 "name":"",
+                 "name":"areaAction",
                  "rotation":0,
-                 "type":"",
+                 "type":"action",
                  "visible":true,
-                 "width":70.0000000000001,
+                 "width":70,
                  "x":140,
-                 "y":70
+                 "y":140
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -57,8 +57,18 @@
         }],
  "nextobjectid":2,
  "orientation":"orthogonal",
+ "properties":
+    {
+     "scrollFactorX":1,
+     "scrollFactorY":1
+    },
+ "propertytypes":
+    {
+     "scrollFactorX":"int",
+     "scrollFactorY":"int"
+    },
  "renderorder":"left-up",
- "tiledversion":"1.1.5",
+ "tiledversion":"1.1.6",
  "tileheight":70,
  "tilesets":[
         {

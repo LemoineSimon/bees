@@ -1315,12 +1315,15 @@ var Elevator = function () {
         this.height = this.map.heightInPixels;
         this.x = 0;
         this.y = 0;
+        console.log(this.map);
         this.create();
     }
 
     (0, _createClass3.default)(Elevator, [{
         key: 'create',
         value: function create() {
+            console.log(this.map);
+            // console.log(Elevator.SENSOR)
             this.createFloor();
             this.createBackground();
             this.createDecoration();
@@ -1329,27 +1332,28 @@ var Elevator = function () {
     }, {
         key: 'createBackground',
         value: function createBackground() {
-            this.backgroundLayer = this.map.createDynamicLayer(Elevator.BACKGROUND, this.tileset, this.x, this.y);
+            this.backgroundLayer = this.map.createStaticLayer(Elevator.BACKGROUND, this.tileset, this.x, this.y);
         }
     }, {
         key: 'createFloor',
         value: function createFloor() {
-            this.floorLayer = this.map.createDynamicLayer(Elevator.FLOOR, this.tileset, this.x, this.y);
+            this.floorLayer = this.map.createStaticLayer(Elevator.FLOOR, this.tileset, this.x, this.y);
+            console.log(this.floorLayer);
             this.floorLayer.setCollisionByExclusion([-1], true);
             this.scene.physics.add.collider(this.scene.player.entity, this.floorLayer);
         }
     }, {
         key: 'createDecoration',
         value: function createDecoration() {
-            this.decorationLayer = this.map.createDynamicLayer(Elevator.DECORATION, this.tileset, this.x, this.y);
+            this.decorationLayer = this.map.createStaticLayer(Elevator.DECORATION, this.tileset, this.x, this.y);
         }
     }, {
         key: 'createSensor',
         value: function createSensor() {
             var _this = this;
 
-            var sensorLayer = this.map.getObjectLayer(Elevator.SENSOR);
-            sensorLayer.objects.map(function (sensor) {
+            this.sensorLayer = this.map.getObjectLayer(Elevator.SENSOR);
+            this.sensorLayer.objects.map(function (sensor) {
                 var x = _this.x + sensor.x;
                 var y = _this.y + sensor.y;
                 _this.sensor = new Phaser.Geom.Rectangle(x, y, sensor.width, sensor.height);
@@ -1387,15 +1391,16 @@ var Elevator = function () {
             this.state = Elevator.STATE.moving;
             this.y -= this.height;
             var tween = this.scene.tweens.add({
-                targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
+                targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer],
                 y: this.y,
                 duration: 1000,
                 ease: 'Sine.easeOut',
                 onUpdate: function onUpdate() {
                     // We force the player to not moving
-                    _this2.scene.player.getCharacter().body.setVelocityY(0);
+                    _this2.scene.player.entity.body.setVelocityY(0);
                 },
                 onComplete: function onComplete() {
+                    _this2.sensor.y -= _this2.height;
                     _this2.state = Elevator.STATE.iddle;
                 }
             });
@@ -1408,15 +1413,16 @@ var Elevator = function () {
             this.state = Elevator.STATE.moving;
             this.y += this.height;
             var tween = this.scene.tweens.add({
-                targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
+                targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer],
                 y: this.y,
                 duration: 1000,
                 ease: 'Sine.easeOut',
                 onUpdate: function onUpdate() {
                     // We force the player to not moving
-                    _this3.scene.player.getCharacter().body.setVelocityY(600);
+                    _this3.scene.player.entity.body.setVelocityY(600);
                 },
                 onComplete: function onComplete() {
+                    _this3.sensor.y += _this3.height;
                     _this3.state = Elevator.STATE.iddle;
                 }
             });

@@ -9,10 +9,13 @@ class Elevator {
         this.height = this.map.heightInPixels;
         this.x = 0;
         this.y = 0;
+        console.log(this.map)
         this.create();
     }
 
     create() {
+        console.log(this.map)
+        // console.log(Elevator.SENSOR)
         this.createFloor();
         this.createBackground();
         this.createDecoration();
@@ -20,22 +23,23 @@ class Elevator {
     }
 
     createBackground() {
-        this.backgroundLayer = this.map.createDynamicLayer(Elevator.BACKGROUND, this.tileset, this.x, this.y);
+        this.backgroundLayer = this.map.createStaticLayer(Elevator.BACKGROUND, this.tileset, this.x, this.y);
     }
 
     createFloor() {
-        this.floorLayer = this.map.createDynamicLayer(Elevator.FLOOR, this.tileset, this.x, this.y);
+        this.floorLayer = this.map.createStaticLayer(Elevator.FLOOR, this.tileset, this.x, this.y);
+        console.log(this.floorLayer);
         this.floorLayer.setCollisionByExclusion([-1], true);
         this.scene.physics.add.collider(this.scene.player.entity, this.floorLayer);
     }
 
     createDecoration() {
-        this.decorationLayer = this.map.createDynamicLayer(Elevator.DECORATION, this.tileset, this.x, this.y);
+        this.decorationLayer = this.map.createStaticLayer(Elevator.DECORATION, this.tileset, this.x, this.y);
     }
 
     createSensor() {
-        let sensorLayer = this.map.getObjectLayer(Elevator.SENSOR);
-        sensorLayer.objects.map(sensor => {
+        this.sensorLayer = this.map.getObjectLayer(Elevator.SENSOR);
+        this.sensorLayer.objects.map(sensor => {
             let x = this.x + sensor.x;
             let y = this.y + sensor.y;
             this.sensor = new Phaser.Geom.Rectangle(x, y, sensor.width, sensor.height);
@@ -68,15 +72,16 @@ class Elevator {
         this.state = Elevator.STATE.moving;
         this.y -= this.height;
         let tween = this.scene.tweens.add({
-            targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
+            targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer],
             y: this.y,
             duration: 1000,
             ease: 'Sine.easeOut',
             onUpdate: () => {
                 // We force the player to not moving
-                this.scene.player.getCharacter().body.setVelocityY(0);
+                this.scene.player.entity.body.setVelocityY(0);
             },
             onComplete: () => {
+                this.sensor.y -= this.height;
                 this.state = Elevator.STATE.iddle;
             }
         });
@@ -86,15 +91,16 @@ class Elevator {
         this.state = Elevator.STATE.moving;
         this.y += this.height;
         let tween = this.scene.tweens.add({
-            targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer, this.sensor],
+            targets: [this.floorLayer, this.decorationLayer, this.backgroundLayer,],
             y: this.y,
             duration: 1000,
             ease: 'Sine.easeOut',
             onUpdate: () => {
                 // We force the player to not moving
-                this.scene.player.getCharacter().body.setVelocityY(600);
+                this.scene.player.entity.body.setVelocityY(600);
             },
             onComplete: () => {
+                this.sensor.y += this.height;
                 this.state = Elevator.STATE.iddle;
             }
         });
